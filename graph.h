@@ -47,7 +47,26 @@ public:
         nodes.push_back(new node(data));
     }
 
-    void removeEdge(){}
+    void removeEdge(N a, N b){
+        for(ni = nodes.begin(); ni!=nodes.end(); ni++) {
+            if ((*ni)->getData() == a) {
+                for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
+                    if (((*ei)->nodes[0])->getNdata() == a) {
+                        (*ni)->edges.erase(ei);
+                        break;
+                    }
+                }
+            }
+
+            if ((*ni)->getData() == b) {
+                for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
+                    if (((*ei)->nodes[0])->getNdata() == b) {
+                        (*ni)->edges.erase(ei);
+                        break;
+                    }
+                }
+            }
+        }
 
     bool removeNode(N data){
         node* nodo;
@@ -100,11 +119,10 @@ public:
 
     void print(){}
 
-    bool addNodo() {
-
-    }
+    bool addNodo() {}
 
     ~Graph(){}
+
 private:
 
     NodeSeq nodes;
