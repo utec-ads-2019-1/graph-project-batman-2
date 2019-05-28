@@ -110,6 +110,7 @@ public:
 
     void propiedades(float c){
         //chequear si es denso o disperso
+        cout<<"Tipo de grafo: ";
         float sizeNodes = nodes.size();
         float sizeEdges = 0;
         float densidad = 0;
@@ -118,8 +119,8 @@ public:
             sizeEdges += (*ni)->edges.size();
         }
         densidad = sizeEdges/(sizeNodes*(sizeNodes-1));
-        if(densidad>c)cout<<"Es un grafo denso"<<"\n";
-        else cout<<"Es un grafo disperso"<<"\n";
+        if(densidad>c)cout<<"DENSO"<<"\n";
+        else cout<<"DISPERSO"<<"\n";
 
 
     }
@@ -133,8 +134,6 @@ public:
     bool DFS(){}
 
     void print(){}
-
-    bool addNodo() {}
 
     ~Graph(){}
 
