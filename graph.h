@@ -47,11 +47,17 @@ public:
         nodes.push_back(new node(data));
     }
 
-    void removeEdge(){}
+    void removeEdge(E weight, node *A, node *B){
+
+        A->edges.remove(weight);
+        B->edges.remove(weight);
+    }
 
     void removeNode(){}
 
-    bool searchEdge(){}
+    bool searchEdge(E weight, node *a, node *b){
+
+    }
 
     bool searchNode(){}
 
@@ -67,11 +73,10 @@ public:
 
     void print(){}
 
-    bool addNodo() {
-
-    }
+    bool addNodo() {}
 
     ~Graph(){}
+
 private:
 
     NodeSeq nodes;
