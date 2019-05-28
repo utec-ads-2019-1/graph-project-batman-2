@@ -49,11 +49,44 @@ public:
 
     void removeEdge(){}
 
-    void removeNode(){}
+    bool removeNode(N data){
+        node* nodo;
+        if(searchNode(data, nodo)){
+            for(EdgeIte it=nodo->edges.begin();it!=nodo->edges.end();it++){
+                edge *ar = *it;
+                node* otro;
+                if(ar->nodes[0] != nodo){
+                    otro = ar->nodes[0];
+                } else if(ar->nodes[1] != nodo){
+                    otro = ar->nodes[1];
+                }
+                for(EdgeIte it2=otro->edges.begin();it2!=otro->edges.end();it2++){
+                    if( (*it2) == ar ) {
+                        otro->edges.erase(it);
+                        break;
+                    }
+                }
+            }
+            for(NodeIte it=nodes.begin();it!=nodes.end();it++){
+                if( (*it) == nodo ){
+                    nodes.erase(it);
+                    break;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
-    bool searchEdge(){}
-
-    bool searchNode(){}
+    bool searchNode(N data, node* &node){
+        for(NodeIte it=nodes.begin();it!=nodes.end();it++){
+            if((*it)->data==data){
+                node=*it;
+                return true;
+            }
+        }
+        return false;
+    }
 
     void propiedades(){}
 
@@ -81,6 +114,5 @@ private:
 
 };
 
-//typedef Graph<Traits> graph;
 
 #endif
