@@ -33,3 +33,12 @@
 
 # Visual Studio Code
 .vscode/ipch
+
+# Extra
+*.ipch
+cmake-build-debug/*
+.vscode/*
+CMakeLists.txt
+*.out
+.vscode/
+.vscode
