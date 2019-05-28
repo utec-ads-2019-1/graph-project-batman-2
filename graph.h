@@ -46,6 +46,26 @@ public:
         listaDeAdjacencia[inicio].push_back(fin);
     }
 
+    void addVertice(){}
+
+    void removeArista(){}
+
+    void removeVertice(){}
+
+    bool searchArista(){}
+
+    bool searchVertice(){}
+
+    void propiedades(){}
+
+    void prim(){}
+
+    void kruskal(){}
+
+    bool BFS(){}
+
+    bool DFS(){}
+
     void print(){
         for (int i = 0; i < nNodos; ++i) {
             cout<<i<<"->";
