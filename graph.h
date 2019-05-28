@@ -108,7 +108,21 @@ public:
         return false;
     }
 
-    void propiedades(){}
+    void propiedades(float c){
+        //chequear si es denso o disperso
+        float sizeNodes = nodes.size();
+        float sizeEdges = 0;
+        float densidad = 0;
+
+        for(ni = nodes.begin(); ni != nodes.end(); ni++){
+            sizeEdges += (*ni)->edges.size();
+        }
+        densidad = sizeEdges/(sizeNodes*(sizeNodes-1));
+        if(densidad>c)cout<<"Es un grafo denso"<<"\n";
+        else cout<<"Es un grafo disperso"<<"\n";
+
+
+    }
 
     void prim(){}
 
