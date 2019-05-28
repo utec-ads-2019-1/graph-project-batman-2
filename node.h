@@ -15,6 +15,7 @@ class Node {
         N data;
         double x;
         double y;
+        Node* next;
 };
 
 #endif
