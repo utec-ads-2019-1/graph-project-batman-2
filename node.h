@@ -1,5 +1,8 @@
 #ifndef NODE_H
 #define NODE_H
+#include <list>
+
+using namespace std;
 
 template <typename G>
 class Node {
@@ -9,13 +12,13 @@ class Node {
         typedef typename G::edge edge;
         typedef typename G::EdgeSeq EdgeSeq;
 
+        Node(N data) : data(data) {};
         EdgeSeq edges;
 
     private:
         N data;
         double x;
         double y;
-        Node* next;
 };
 
 #endif

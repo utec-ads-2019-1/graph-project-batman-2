@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <list>
+#include <map>
 
 #include "node.h"
 #include "edge.h"
@@ -17,17 +18,10 @@ public:
 
 template<typename Tr>
 class Graph {
-private:
-    int nNodos;
-    list<Tr> *listaDeAdjacencia;
-
-    /*NodeSeq nodes;
-    NodeIte ni;
-    EdgeIte ei;*/
 
 public:
-    typedef Node<Tr> node;
-    /*typedef Graph<Tr> self;
+
+    typedef Graph<Tr> self;
     typedef Node<self> node;
     typedef Edge<self> edge;
     typedef vector<node *> NodeSeq;
@@ -35,26 +29,31 @@ public:
     typedef typename Tr::N N;
     typedef typename Tr::E E;
     typedef typename NodeSeq::iterator NodeIte;
-    typedef typename EdgeSeq::iterator EdgeIte;*/
+    typedef typename EdgeSeq::iterator EdgeIte;
 
-    Graph(int nodos){
-        nNodos = nodos;
-        listaDeAdjacencia = new list<Tr>[nodos];
-    };
+    Graph() {};
 
-    void addArista(Tr inicio, Tr fin){
-        listaDeAdjacencia[inicio].push_back(fin);
+    void addEdge(E weight, node *A, node *B){
+        edge *ar = new edge(weight);
+
+        ar->nodes[0]=A;
+        ar->nodes[1]=B;
+
+        A->edges.push_back(ar);
+        B->edges.push_back(ar);
     }
 
-    void addVertice(){}
+    void addNode(N data){
+        nodes.push_back(new node(data));
+    }
 
-    void removeArista(){}
+    void removeEdge(){}
 
-    void removeVertice(){}
+    void removeNode(){}
 
-    bool searchArista(){}
+    bool searchEdge(){}
 
-    bool searchVertice(){}
+    bool searchNode(){}
 
     void propiedades(){}
 
@@ -66,21 +65,18 @@ public:
 
     bool DFS(){}
 
-    void print(){
-        for (int i = 0; i < nNodos; ++i) {
-            cout<<i<<"->";
-            for (int j: listaDeAdjacencia[i]) {
-                cout<<j<<" ";
-            }
-            cout<<"\n";
-        }
-    }
+    void print(){}
 
     bool addNodo() {
 
     }
 
     ~Graph(){}
+private:
+
+    NodeSeq nodes;
+    NodeIte ni;
+    EdgeIte ei;
 
 
 };
