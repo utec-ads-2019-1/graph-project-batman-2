@@ -67,6 +67,7 @@ public:
                 }
             }
         }
+    }
 
     bool removeNode(N data){
         node* nodo;
