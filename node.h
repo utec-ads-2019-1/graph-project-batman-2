@@ -13,6 +13,10 @@ class Node {
         typedef typename G::EdgeSeq EdgeSeq;
 
         Node(N data) : data(data) {};
+        N getData(){
+            return data;
+        }
+
         EdgeSeq edges;
 
     private:

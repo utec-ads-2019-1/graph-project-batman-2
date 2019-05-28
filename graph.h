@@ -47,17 +47,30 @@ public:
         nodes.push_back(new node(data));
     }
 
-    void removeEdge(E weight, node *A, node *B){
+    void removeEdge(N a, N b){
+        for(ni = nodes.begin(); ni!=nodes.end(); ni++) {
+            if ((*ni)->getData() == a) {
+                for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
+                    if (((*ei)->nodes[0])->getNdata() == a) {
+                        (*ni)->edges.erase(ei);
+                        break;
+                    }
+                }
+            }
 
-        A->edges.remove(weight);
-        B->edges.remove(weight);
+            if ((*ni)->getData() == b) {
+                for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
+                    if (((*ei)->nodes[0])->getNdata() == b) {
+                        (*ni)->edges.erase(ei);
+                        break;
+                    }
+                }
+            }
+        }
+
     }
 
     void removeNode(){}
-
-    bool searchEdge(E weight, node *a, node *b){
-
-    }
 
     bool searchNode(){}
 
