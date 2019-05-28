@@ -31,3 +31,7 @@ A tomar en consideracion:
 ~se debe poder trabajar con grafo dirigido o no dirigido
 ~usar typetraits para definir el tipo de los nodos(floats,ints..)
 ~usar opengl para visualizar el grafo
+
+Prioridades:
+1.-Creacion del grafo
+2.-Funcionalidades
