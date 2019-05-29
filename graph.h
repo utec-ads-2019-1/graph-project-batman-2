@@ -46,6 +46,8 @@ public:
 
         A->edges.push_back(ar);
         B->edges.push_back(ar);
+
+        edges.push_back(ar);
     }
 
     void addNode(N data){
@@ -55,8 +57,22 @@ public:
     void removeEdge(N a, N b){
         for(ei = edges.begin();ei!=edges.end();ei++){
             if(((*ei)->nodes[0]->getData()==a && (*ei)->nodes[1]->getData()==b) ||
-                    ((*ei)->nodes[1]->getData()==a && (*ei)->nodes[0]->getData()==b)){
-
+                    ((*ei)->nodes[1]->getData()==a && (*ei)->nodes[0]->getData()==b)){ //encontrar el edge
+                edge* ar = (*ei);
+                //borrar el edge de los 2 nodos
+                node* n0 = ar->nodes[0];
+                node* n1 = ar->nodes[1];
+                for(EdgeIte eite = n0->edges.begin();eite!=n0->edges.end();eite++){
+                    if((*eite)==ar){
+                        n0->edges.erase(eite);
+                    }
+                }
+                for(EdgeIte eite = n1->edges.begin();eite!=n1->edges.end();eite++){
+                    if((*eite)==ar){
+                        n1->edges.erase(eite);
+                    }
+                }
+                edges.erase(ei);
             }
         }
     }
