@@ -107,6 +107,23 @@ public:
         return false;
     }
 
+
+    bool node_exists(NodeSeq nodes, node node){
+        for(NodeIte nodeIte = nodes.begin(); nodeIte != nodes.end(); nodeIte++){
+            if(*nodeIte == node){
+                return true;
+            }
+        }
+    }
+
+    bool edge_exists(EdgeSeq edges, edge edge){
+        for(EdgeIte edgeIte = edges.begin(); edgeIte != edges.end(); edgeIte++){
+            if(*edgeIte == edege){
+                return true;
+            }
+        }
+    }
+
     bool searchNode(N data, node* &node){
         for(NodeIte it=nodes.begin();it!=nodes.end();it++){
             if((*it)->getData()==data){
@@ -122,6 +139,7 @@ public:
             if ((*ni)->getData() == a) {
                 for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
                     if (((*ei)->nodes[1])->getData() == a) {
+
                         return true;
                     }
                 }
@@ -153,9 +171,74 @@ public:
     }
 
 
-    void prim(){}
+    self prim(node vertice){
+        NodeSeq newNodes;
+        edge minEdge;
+        newNodes.push_back(vertice);
 
-    void kruskal(){}
+        while (newNodes.size() < nodes.size()){
+            EdgeSeq tempEdges;
+            //Se agregan todas las aristas de los nodos actuales a la lista temporal
+            for(NodeIte nodeIte = newNodes.begin(); nodeIte != newNodes.end(); nodeIte++){
+                node temp = *nodeIte;
+                for(EdgeIte edgeIte = temp.edges.begin(); edgeIte != temp.edges.end(); edgeIte++){
+                    if(!searchEdge(newEdges, temp)) {
+                        tempEdges.push_back(temp);
+                    }
+                }
+            }
+            //Se busca la arista de meno peso
+            minEdge = tempEdges[0];
+            for(EdgeIte edgeIte = tempEdges.begin(); edgeIte != tempEdges.end(); edgeIte++){
+                edge temp = *edgeIte;
+                if(temp.weight < minEdge.weight){
+                    if(!searchNode(newNodes, temp.nodes[0]) || !searchNode(newNodes, temp.nodes[0]))
+                        minEdge = temp;
+                }
+            }
+            for(int i = 0; i < minEdge.nodes->size(); i++) {
+                bool repeat = false;
+                for(NodeIte nodeIte = newNodes.begin(); nodeIte != newNodes.end(); nodeIte++){
+                    node temp = *nodeIte
+                    if(temp == minEdge.nodes[i]) {
+                        repeat = true;
+                    }
+                }
+                if(!repeat) {
+                    node newNode = minEdge.nodes[i];
+                    newNode.edges.clear();
+                    newNodes.push_back(newNode);
+                }
+            }
+            for(NodeIte nodeIte = newNodes.begin(); nodeIte != newNodes.end(); nodeIte++){
+                node temp = *nodeIte;
+                if(*nodeIte == minEdge.nodes[0] || *nodeIte == minEdge.nodes[1]){
+                    temp.edges.push_back(minEdge);
+                }
+            }
+            remaining--;
+        }
+        return self(newNodes);
+    }
+
+    self kruskal(){
+        /*NodeSeq newNodes;
+        edge minEdge;
+        while(newNodes.size() < nodes.size()){
+            EdgeSeq tempEdges;
+            //Se agregan todas las aristas del grafo a la lista temporal
+            for(NodeIte nodeIte = nodes.begin(); nodeIte != nodes.end(); nodeIte++){
+
+            }
+            //Se busca la arista de menor peso
+            minEdge = tempEdges[0];
+            for(EdgeIte edgeIte = tempEdges.begin(); edgeIte != tempEdges.end(); edgeIte++{
+
+            }
+                remaining--;
+        }
+        return self(newNodes);*/
+    }
 
     void BFS(N data){
         map<N,bool> visited;
@@ -206,4 +289,5 @@ private:
 };
 
 typedef Graph<Traits> graph;
+
 #endif
