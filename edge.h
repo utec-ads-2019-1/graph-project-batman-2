@@ -10,6 +10,10 @@ class Edge {
         typedef typename G::node node;
         Edge(E weight) : weight(weight), dir(false) {};
         node* nodes[2];
+
+        E getWeight(){
+            return weight;
+        }
     private:
         E weight;
         bool dir;

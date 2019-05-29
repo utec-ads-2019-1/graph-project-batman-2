@@ -33,7 +33,7 @@ public:
 
     Graph() {};
 
-    void addEdge(E weight, N dataA, N dataB){
+    edge* addEdge(E weight, N dataA, N dataB){
         edge *ar = new edge(weight);
 
         node* A;
@@ -47,11 +47,24 @@ public:
         A->edges.push_back(ar);
         B->edges.push_back(ar);
 
-        edges.push_back(ar);
+       if(edges.size()>0) {
+            for (ei = edges.begin(); ei != edges.end(); ei++) {
+                if (weight < (*ei)->getWeight()) {
+                    edges.insert(ei, ar);
+                    break;
+                }
+            }
+           edges.push_back(ar);
+        } else {
+            edges.push_back(ar);
+        }
+        return ar;
     }
 
-    void addNode(N data){
-        nodes.push_back(new node(data));
+    node* addNode(N data){
+        node* nodo = new node(data);
+        nodes.push_back(nodo);
+        return nodo;
     }
 
     void removeEdge(N a, N b){
@@ -164,57 +177,37 @@ public:
 
 
     self prim(node vertice){
-        NodeSeq newNodes;
-        edge minEdge;
-        newNodes.push_back(vertice);
 
-        while (newNodes.size() < nodes.size()){
-            EdgeSeq tempEdges;
-            //Se agregan todas las aristas de los nodos actuales a la lista temporal
-            for(NodeIte nodeIte = newNodes.begin(); nodeIte != newNodes.end(); nodeIte++){
-                node temp = *nodeIte;
-                for(EdgeIte edgeIte = temp.edges.begin(); edgeIte != temp.edges.end(); edgeIte++){
-                    if(!searchEdge(newEdges, temp)) {
-                        tempEdges.push_back(temp);
-                    }
-                }
-            }
-            //Se busca la arista de meno peso
-            minEdge = tempEdges[0];
-            for(EdgeIte edgeIte = tempEdges.begin(); edgeIte != tempEdges.end(); edgeIte++){
-                edge temp = *edgeIte;
-                if(temp.weight < minEdge.weight){
-                    if(!searchNode(newNodes, temp.nodes[0]) || !searchNode(newNodes, temp.nodes[0]))
-                        minEdge = temp;
-                }
-            }
-            for(int i = 0; i < minEdge.nodes->size(); i++) {
-                bool repeat = false;
-                for(NodeIte nodeIte = newNodes.begin(); nodeIte != newNodes.end(); nodeIte++){
-                    node temp = *nodeIte
-                    if(temp == minEdge.nodes[i]) {
-                        repeat = true;
-                    }
-                }
-                if(!repeat) {
-                    node newNode = minEdge.nodes[i];
-                    newNode.edges.clear();
-                    newNodes.push_back(newNode);
-                }
-            }
-            for(NodeIte nodeIte = newNodes.begin(); nodeIte != newNodes.end(); nodeIte++){
-                node temp = *nodeIte;
-                if(*nodeIte == minEdge.nodes[0] || *nodeIte == minEdge.nodes[1]){
-                    temp.edges.push_back(minEdge);
-                }
-            }
-            remaining--;
-        }
-        return self(newNodes);
     }
 
-    self kruskal(N data){
+    self kruskal(){
+        map<N,bool> visited;
+        for(ni = nodes.begin();ni!=nodes.end();ni++)
+            visited[(*ni)->getData()]=false; //crea un mapa <nombre de nodo, false> con todos los nodos
 
+        self krus;
+        int e=0,i=0;
+        int n = nodes.size();
+
+        for(ei = edges.begin();ei!=edges.end();ei++){ //lista ordenada
+            edge* minedge = (*ei);
+            node* n0 = minedge->nodes[0];
+            node* n1 = minedge->nodes[1];
+            if(!visited[n0->getData()] || !visited[n1->getData()] ){ //si alguno de los nodos no ha sido visitado
+                if(!krus.searchNode(n0->getData(),n0))
+                    krus.addNode(n0->getData());
+                if(!krus.searchNode(n1->getData(),n1)) //agrega los dos nodos al nuevo grafo
+                    krus.addNode(n1->getData());
+                krus.addEdge(minedge->getWeight(),n0->getData(),n1->getData()); //los conecta con esta arista
+                visited[n0->getData()]=true;
+                visited[n1->getData()]=true; //los marca como visitados
+            }
+        }
+
+        /*for(ni = krus.nodes.begin();ni!=krus.nodes.end();ni++){
+            cout<<(*ni)->getData()<<" ";
+        }*/
+        return krus;
     }
 
     void BFS(N data){
