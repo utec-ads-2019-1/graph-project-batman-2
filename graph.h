@@ -31,7 +31,7 @@ public:
     typedef typename NodeSeq::iterator NodeIte;
     typedef typename EdgeSeq::iterator EdgeIte;
 
-    Graph(bool esDirigido):esDirigido(esDirigido) {};
+    Graph() {};
 
     void addEdge(E weight, N dataA, N dataB){
         edge *ar = new edge(weight);
