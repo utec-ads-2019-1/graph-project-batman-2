@@ -21,11 +21,11 @@ class Node {
 
 
 
-        Node* getOtherNode(edge ar){
-            if(ar[0]!=this){
-                return ar[0];
+        Node* getOtherNode(edge* ar){
+            if(ar->nodes[0]!=this){
+                return ar->nodes[0];
             } else
-                return ar[1];
+                return ar->nodes[1];
         }
 
     private:

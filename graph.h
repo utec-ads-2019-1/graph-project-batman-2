@@ -35,8 +35,11 @@ public:
 
     void addEdge(E weight, N dataA, N dataB){
         edge *ar = new edge(weight);
-        node* A = new node(dataA);
-        node* B = new node(dataB);
+
+        node* A;
+        node* B;
+        searchNode(dataA,A);
+        searchNode(dataB,B);
 
         ar->nodes[0]=A;
         ar->nodes[1]=B;
@@ -53,18 +56,22 @@ public:
         for(ni = nodes.begin(); ni!=nodes.end(); ni++) {
             if ((*ni)->getData() == a) {
                 for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
-                    if (((*ei)->nodes[0])->getData() == a) {
+                    if (((*ei)->nodes[1])->getNdata() == a) {
                         (*ni)->edges.erase(ei);
                         break;
                     }
                 }
             }
 
-            if ((*ni)->getData() == b) {
-                for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
-                    if (((*ei)->nodes[0])->getData() == b) {
-                        (*ni)->edges.erase(ei);
-                        break;
+            //si es dirigido, una vuelta basta, sino revisar tambien la lista del otro node
+            if(!esDirigido) {
+                if ((*ni)->getData() == b) {
+                    for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
+                        if (((*ei)->nodes[0])->getNdata() == b) {
+                            (*ni)->edges.erase(ei);
+                            break;
+                        }
+
                     }
                 }
             }
@@ -110,6 +117,19 @@ public:
         return false;
     }
 
+    bool searchEdge(N a, N b) {
+        for (ni = nodes.begin(); ni != nodes.end(); ni++) {
+            if ((*ni)->getData() == a) {
+                for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
+                    if (((*ei)->nodes[1])->getData() == a) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     void propiedades(float c){
         //chequear si es denso o disperso
         cout<<"Tipo de grafo: ";
@@ -120,7 +140,8 @@ public:
         //itera en la lista de nodoos y suma a una variable
         for(ni = nodes.begin(); ni != nodes.end(); ni++){
             m += (*ni)->edges.size();
-        }
+        }if(esDirigido)m /= 2;
+
         //calcula la densidad
         densidad = m/(n*(n-1));
 
@@ -139,10 +160,10 @@ public:
     void BFS(N data){
         map<N,bool> visited;
         for(ni = nodes.begin();ni!=nodes.end();ni++)
-            visited.insert(pair<N,bool>((*ni)->getData(),false));
+            visited[(*ni)->getData()]=false;
 
         list<node*> queue;
-        visited.find(data)->second = true;
+        visited[data] = true;
         node* nodo;
         searchNode(data, nodo);
         queue.push_back(nodo);
@@ -152,12 +173,15 @@ public:
             nodo = queue.front();
             cout << nodo->getData() << " ";
             queue.pop_front();
-
-            for (ei = nodo->edges.begin(); ei != nodo->edges.end(); ++ei)
+            for (ei = nodo->edges.begin(); ei != nodo->edges.end(); ei++)
             {
-                if (!visited.find(nodo->getOtherNode(*ei))->second)
+
+                node* otro = nodo->getOtherNode(*ei);
+
+                bool visitado = visited[otro->getData()];
+                if (!visitado)
                 {
-                    visited.find(nodo->getOtherNode(*ei))->second=true;
+                    visited[otro->getData()]=true;
                     queue.push_back(nodo->getOtherNode(*ei));
                 }
             }
@@ -176,6 +200,7 @@ private:
     NodeSeq nodes;
     NodeIte ni;
     EdgeIte ei;
+    bool esDirigido;
 
 
 };
