@@ -16,5 +16,8 @@ int main(int argc, char *argv[]) {
     g.addEdge(5, 'A', 'B');
     g.addEdge(7, 'B', 'C');
     g.addEdge(9, 'C', 'D');
+
+
+    g.BFS('A');
     return EXIT_SUCCESS;
 }
