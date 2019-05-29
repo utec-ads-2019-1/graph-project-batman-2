@@ -12,12 +12,14 @@ class Node {
         typedef typename G::edge edge;
         typedef typename G::EdgeSeq EdgeSeq;
 
+        EdgeSeq edges;
+
         Node(N data) : data(data) {};
         N getData(){
             return data;
         }
 
-        EdgeSeq edges;
+
 
         Node* getOtherNode(edge ar){
             if(ar[0]!=this){
@@ -25,6 +27,7 @@ class Node {
             } else
                 return ar[1];
         }
+
     private:
         N data;
         double x;

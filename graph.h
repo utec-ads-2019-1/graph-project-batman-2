@@ -106,7 +106,7 @@ public:
 
     bool searchNode(N data, node* &node){
         for(NodeIte it=nodes.begin();it!=nodes.end();it++){
-            if((*it)->data==data){
+            if((*it)->getData()==data){
                 node=*it;
                 return true;
             }
@@ -155,19 +155,18 @@ public:
     void kruskal(){}
 
     void BFS(N data){
-        map<char,bool> visited;
+        map<N,bool> visited;
         for(ni = nodes.begin();ni!=nodes.end();ni++)
-            visited.insert(pair<char,bool>((*ni)->getData(),false));
+            visited.insert(pair<N,bool>((*ni)->getData(),false));
 
-        NodeSeq queue;
-
+        list<node*> queue;
         visited.find(data)->second = true;
         node* nodo;
-        queue.push_back(searchNode(data, nodo));
+        searchNode(data, nodo);
+        queue.push_back(nodo);
 
         while(!queue.empty())
         {
-
             nodo = queue.front();
             cout << nodo->getData() << " ";
             queue.pop_front();
@@ -200,5 +199,5 @@ private:
 
 };
 
-
+typedef Graph<Traits> graph;
 #endif

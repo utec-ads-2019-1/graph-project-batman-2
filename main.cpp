@@ -6,7 +6,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    Graph<int> g;
+    graph g;
 
     g.addNode('A');
     g.addNode('B');
@@ -17,5 +17,6 @@ int main(int argc, char *argv[]) {
     g.addEdge(7, 'B', 'C');
     g.addEdge(9, 'C', 'D');
 
+    g.BFS('A');
     return EXIT_SUCCESS;
 }
