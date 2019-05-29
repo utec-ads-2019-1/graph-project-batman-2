@@ -53,27 +53,10 @@ public:
     }
 
     void removeEdge(N a, N b){
-        for(ni = nodes.begin(); ni!=nodes.end(); ni++) {
-            if ((*ni)->getData() == a) {
-                for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
-                    if (((*ei)->nodes[1])->getNdata() == a) {
-                        (*ni)->edges.erase(ei);
-                        break;
-                    }
-                }
-            }
+        for(ei = edges.begin();ei!=edges.end();ei++){
+            if(((*ei)->nodes[0]->getData()==a && (*ei)->nodes[1]->getData()==b) ||
+                    ((*ei)->nodes[1]->getData()==a && (*ei)->nodes[0]->getData()==b)){
 
-            //si es dirigido, una vuelta basta, sino revisar tambien la lista del otro node
-            if(!esDirigido) {
-                if ((*ni)->getData() == b) {
-                    for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
-                        if (((*ei)->nodes[0])->getNdata() == b) {
-                            (*ni)->edges.erase(ei);
-                            break;
-                        }
-
-                    }
-                }
             }
         }
     }
@@ -116,14 +99,6 @@ public:
         }
     }
 
-    bool edge_exists(EdgeSeq edges, edge edge){
-        for(EdgeIte edgeIte = edges.begin(); edgeIte != edges.end(); edgeIte++){
-            if(*edgeIte == edege){
-                return true;
-            }
-        }
-    }
-
     bool searchNode(N data, node* &node){
         for(NodeIte it=nodes.begin();it!=nodes.end();it++){
             if((*it)->getData()==data){
@@ -147,6 +122,7 @@ public:
         }
         return false;
     }
+
 
     void propiedades(float c){
         //chequear si es denso o disperso
@@ -221,23 +197,8 @@ public:
         return self(newNodes);
     }
 
-    self kruskal(){
-        /*NodeSeq newNodes;
-        edge minEdge;
-        while(newNodes.size() < nodes.size()){
-            EdgeSeq tempEdges;
-            //Se agregan todas las aristas del grafo a la lista temporal
-            for(NodeIte nodeIte = nodes.begin(); nodeIte != nodes.end(); nodeIte++){
+    self kruskal(N data){
 
-            }
-            //Se busca la arista de menor peso
-            minEdge = tempEdges[0];
-            for(EdgeIte edgeIte = tempEdges.begin(); edgeIte != tempEdges.end(); edgeIte++{
-
-            }
-                remaining--;
-        }
-        return self(newNodes);*/
     }
 
     void BFS(N data){
@@ -281,6 +242,7 @@ public:
 private:
 
     NodeSeq nodes;
+    EdgeSeq edges;
     NodeIte ni;
     EdgeIte ei;
     bool esDirigido;
