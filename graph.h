@@ -31,7 +31,7 @@ public:
     typedef typename NodeSeq::iterator NodeIte;
     typedef typename EdgeSeq::iterator EdgeIte;
 
-    Graph() {};
+    Graph(bool esDirigido):esDirigido(esDirigido) {};
 
     void addEdge(E weight, N dataA, N dataB){
         edge *ar = new edge(weight);
@@ -53,18 +53,22 @@ public:
         for(ni = nodes.begin(); ni!=nodes.end(); ni++) {
             if ((*ni)->getData() == a) {
                 for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
-                    if (((*ei)->nodes[0])->getData() == a) {
+                    if (((*ei)->nodes[1])->getNdata() == a) {
                         (*ni)->edges.erase(ei);
                         break;
                     }
                 }
             }
 
-            if ((*ni)->getData() == b) {
-                for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
-                    if (((*ei)->nodes[0])->getData() == b) {
-                        (*ni)->edges.erase(ei);
-                        break;
+            //si es dirigido, una vuelta basta, sino revisar tambien la lista del otro node
+            if(!esDirigido) {
+                if ((*ni)->getData() == b) {
+                    for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
+                        if (((*ei)->nodes[0])->getNdata() == b) {
+                            (*ni)->edges.erase(ei);
+                            break;
+                        }
+
                     }
                 }
             }
@@ -110,6 +114,19 @@ public:
         return false;
     }
 
+    bool searchEdge(N a, N b) {
+        for (ni = nodes.begin(); ni != nodes.end(); ni++) {
+            if ((*ni)->getData() == a) {
+                for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
+                    if (((*ei)->nodes[1])->getNdata() == a) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     void propiedades(float c){
         //chequear si es denso o disperso
         cout<<"Tipo de grafo: ";
@@ -120,7 +137,8 @@ public:
         //itera en la lista de nodoos y suma a una variable
         for(ni = nodes.begin(); ni != nodes.end(); ni++){
             m += (*ni)->edges.size();
-        }
+        }if(esDirigido)m /= 2;
+
         //calcula la densidad
         densidad = m/(n*(n-1));
 
@@ -177,6 +195,7 @@ private:
     NodeSeq nodes;
     NodeIte ni;
     EdgeIte ei;
+    bool esDirigido;
 
 
 };
