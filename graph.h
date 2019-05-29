@@ -35,8 +35,11 @@ public:
 
     void addEdge(E weight, N dataA, N dataB){
         edge *ar = new edge(weight);
-        node* A = new node(dataA);
-        node* B = new node(dataB);
+
+        node* A;
+        node* B;
+        searchNode(dataA,A);
+        searchNode(dataB,B);
 
         ar->nodes[0]=A;
         ar->nodes[1]=B;
@@ -135,7 +138,8 @@ public:
         for (ni = nodes.begin(); ni != nodes.end(); ni++) {
             if ((*ni)->getData() == a) {
                 for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
-                    if (((*ei)->nodes[1])->getNdata() == a) {
+                    if (((*ei)->nodes[1])->getData() == a) {
+
                         return true;
                     }
                 }
@@ -239,10 +243,10 @@ public:
     void BFS(N data){
         map<N,bool> visited;
         for(ni = nodes.begin();ni!=nodes.end();ni++)
-            visited.insert(pair<N,bool>((*ni)->getData(),false));
+            visited[(*ni)->getData()]=false;
 
         list<node*> queue;
-        visited.find(data)->second = true;
+        visited[data] = true;
         node* nodo;
         searchNode(data, nodo);
         queue.push_back(nodo);
@@ -252,12 +256,15 @@ public:
             nodo = queue.front();
             cout << nodo->getData() << " ";
             queue.pop_front();
-
-            for (ei = nodo->edges.begin(); ei != nodo->edges.end(); ++ei)
+            for (ei = nodo->edges.begin(); ei != nodo->edges.end(); ei++)
             {
-                if (!visited.find(nodo->getOtherNode(*ei))->second)
+
+                node* otro = nodo->getOtherNode(*ei);
+
+                bool visitado = visited[otro->getData()];
+                if (!visitado)
                 {
-                    visited.find(nodo->getOtherNode(*ei))->second=true;
+                    visited[otro->getData()]=true;
                     queue.push_back(nodo->getOtherNode(*ei));
                 }
             }
