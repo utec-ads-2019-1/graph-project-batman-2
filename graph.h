@@ -33,8 +33,10 @@ public:
 
     Graph(bool esDirigido):esDirigido(esDirigido) {};
 
-    void addEdge(E weight, node *A, node *B){
+    void addEdge(E weight, N dataA, N dataB){
         edge *ar = new edge(weight);
+        node* A = new node(dataA);
+        node* B = new node(dataB);
 
         ar->nodes[0]=A;
         ar->nodes[1]=B;
@@ -66,6 +68,7 @@ public:
                             (*ni)->edges.erase(ei);
                             break;
                         }
+
                     }
                 }
             }
@@ -74,23 +77,23 @@ public:
 
     bool removeNode(N data){
         node* nodo;
-        if(searchNode(data, nodo)){
-            for(EdgeIte it=nodo->edges.begin();it!=nodo->edges.end();it++){
+        if(searchNode(data, nodo)){ //si encuentra el nodo:
+            for(EdgeIte it=nodo->edges.begin();it!=nodo->edges.end();it++){//itera en sus edges
                 edge *ar = *it;
                 node* otro;
-                if(ar->nodes[0] != nodo){
+                if(ar->nodes[0] != nodo){ //estos dos if sirven para encontrar el otro nodo conectado a "nodo" por la arista ar
                     otro = ar->nodes[0];
                 } else if(ar->nodes[1] != nodo){
                     otro = ar->nodes[1];
                 }
-                for(EdgeIte it2=otro->edges.begin();it2!=otro->edges.end();it2++){
+                for(EdgeIte it2=otro->edges.begin();it2!=otro->edges.end();it2++){//itera en los edges del otro nodo para encontrar la misma arista y borrarla
                     if( (*it2) == ar ) {
                         otro->edges.erase(it);
                         break;
                     }
                 }
             }
-            for(NodeIte it=nodes.begin();it!=nodes.end();it++){
+            for(NodeIte it=nodes.begin();it!=nodes.end();it++){//borra el nodo "nodo" de la lista nodes
                 if( (*it) == nodo ){
                     nodes.erase(it);
                     break;
@@ -146,11 +149,40 @@ public:
 
     }
 
+
     void prim(){}
 
     void kruskal(){}
 
-    bool BFS(){}
+    void BFS(N data){
+        map<char,bool> visited;
+        for(ni = nodes.begin();ni!=nodes.end();ni++)
+            visited.insert(pair<char,bool>((*ni)->getData(),false));
+
+        NodeSeq queue;
+
+        visited.find(data)->second = true;
+        node* nodo;
+        queue.push_back(searchNode(data, nodo));
+
+        while(!queue.empty())
+        {
+
+            nodo = queue.front();
+            cout << nodo->getData() << " ";
+            queue.pop_front();
+
+            for (ei = nodo->edges.begin(); ei != nodo->edges.end(); ++ei)
+            {
+                if (!visited.find(nodo->getOtherNode(*ei))->second)
+                {
+                    visited.find(nodo->getOtherNode(*ei))->second=true;
+                    queue.push_back(nodo->getOtherNode(*ei));
+                }
+            }
+
+        }
+    }
 
     bool DFS(){}
 

@@ -19,6 +19,12 @@ class Node {
 
         EdgeSeq edges;
 
+        Node* getOtherNode(edge ar){
+            if(ar[0]!=this){
+                return ar[0];
+            } else
+                return ar[1];
+        }
     private:
         N data;
         double x;
