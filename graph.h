@@ -338,6 +338,8 @@ public:
         searchNode(data, nodo);
         queue.push_back(nodo);
 
+        EdgeSeq aristas;
+
         while (!queue.empty()) {
             nodo = queue.front();
             cout << nodo->getData() << " ";
@@ -346,13 +348,14 @@ public:
                 node *otro = nodo->getOtherNode(*ei);
                 bool visitado = visited[otro->getData()];
                 if (!visitado) {
+                    aristas.push_back(*ei);
                     visited[otro->getData()] = true;
                     queue.push_back(nodo->getOtherNode(*ei));
                 }
             }
 
         }
-
+        return aristas;
     }
 
     NodeSeq DFS(N data){
