@@ -4,6 +4,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <stack>
 
 #include "node.h"
 #include "edge.h"
@@ -31,7 +32,8 @@ public:
     typedef typename NodeSeq::iterator NodeIte;
     typedef typename EdgeSeq::iterator EdgeIte;
 
-    Graph() {};
+    Graph(): esDirigido(false){};
+
 
     edge* addEdge(E weight, N dataA, N dataB){
         edge *ar = new edge(weight);
@@ -163,26 +165,55 @@ public:
     }
 
 
-    void propiedades(float c){
+    bool densidad() {
         //chequear si es denso o disperso
-        cout<<"Tipo de grafo: ";
+        cout << "Tipo de grafo: ";
         float n = nodes.size(); //cantidad de nodos
         float m = 0; //cantidad de aristas
         float densidad = 0;
 
         //itera en la lista de nodoos y suma a una variable
-        for(ni = nodes.begin(); ni != nodes.end(); ni++){
+        for (ni = nodes.begin(); ni != nodes.end(); ni++) {
             m += (*ni)->edges.size();
-        }if(esDirigido)m /= 2;
+        }if (esDirigido)m /= 2;
 
-        //calcula la densidad
-        densidad = m/(n*(n-1));
+        //divido entre 2 si es que no es dirigido y calculo la densidad
+        densidad = m / (n * (n - 1));
 
         //si el calculo es cercano a 0, es disperso, si es cercano a 1 es denso
-        if(densidad>c)cout<<"DENSO"<<"\n";
-        else cout<<"DISPERSO"<<"\n";
+        if (densidad >= 0.5){printf("DENSO (densidad = %f)", densidad);
+            return true;}
+        else {printf("DISPERSO (densidad = %f)", densidad);
+            return true;}
 
+    }
 
+    bool conexo(){
+        //itero en cada nodo y va marcando cada arista que entra y sale
+        //si en algun momento nada entra ni sale de ese nodo entonces sabemos que es no conexo
+        for(ni = nodes.begin(); ni != nodes.end(); ni++){
+            bool salida=false;
+            bool entrada=false;
+            //chequea las aristas de salida del nodo
+            for(ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++){
+                salida=true;
+            }
+            //itera en los demas nodos y chequea si es que sus aristas llegan al nodo del momento
+            for (NodeIte ni1 = nodes.begin(); ni1 != nodes.end(); ni1++){
+                for(EdgeIte ei1 = (*ni1)->edges.begin(); ei1 != (*ni1)->edges.end(); ei1++){
+                    if ((*ei1) -> nodes[1]==(*ni)){
+
+                        entrada=true;
+                    }
+                }
+            }
+            if (!salida && !entrada){
+                printf("no es conexo");
+                return false;
+            }
+        }
+        printf("es conexo");
+        return true;
     }
 
     self prim(N data){
@@ -343,11 +374,46 @@ public:
         }
     }
 
-    bool DFS(){}
+    bool DFS(N data){
+        //crea un vector para los visitados, tamanio la cantidad de nodos y rellenalo con false
+        vector<bool> visited(nodes.size(), false);
+        stack<N> daStack;
+        daStack.push(data);
 
-    void print(){}
+        while(!daStack.empty()){
+            data = daStack.top();
+            daStack.pop();
 
-    ~Graph(){}
+            if (!visited[data])
+            {
+                cout << data << " ";
+                visited[data] = true;
+            }
+
+            for(auto n = nodes.begin(); n!=nodes.end(); ++n){
+                if (!visited[*n]) daStack.push(*n);
+            }
+            
+
+        }
+    }
+
+    void printVE(){
+        for(ni = nodes.begin(); ni != nodes.end(); ni++){
+            cout << (*ni)->getData() << "->";
+            for(ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++){
+                cout << (*ei)->getWeight() << " ";
+            }
+            cout << endl;
+        }
+    }
+
+    ~Graph(){
+        while(!nodes.empty()){
+            delete nodes.back();
+            nodes.pop_back();
+        }
+    }
 
 private:
 

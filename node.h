@@ -14,7 +14,9 @@ class Node {
 
         EdgeSeq edges;
 
+
         Node(N data) : data(data) {};
+
         N getData(){
             return data;
         }

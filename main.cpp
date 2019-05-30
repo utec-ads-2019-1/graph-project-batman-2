@@ -13,20 +13,15 @@ int main(int argc, char *argv[]) {
     g.addNode('C');
     g.addNode('D');
     g.addNode('E');
-    g.addNode('F');
+
 
     g.addEdge(5, 'A', 'B');
     g.addEdge(7, 'B', 'C');
-    g.addEdge(9, 'C', 'D');
-    g.addEdge(10, 'D', 'A');
-    g.addEdge(1, 'A', 'E');
-    g.addEdge(8, 'B', 'E');
-    g.addEdge(14, 'C', 'E');
-    g.addEdge(3, 'D', 'E');
-    g.addEdge(12, 'D', 'F');
-    g.addEdge(5, 'C', 'F');
+    g.addEdge(9, 'C', 'E');
+    g.addEdge(9, 'E', 'B');
+    g.addEdge(9, 'A', 'D');
+    g.addEdge(9, 'D', 'B');
 
-    g.prim('A');
-
+    g.conexo();
     return EXIT_SUCCESS;
 }
