@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     g.addEdge(9, 'A', 'D', true);
     g.addEdge(9, 'D', 'B', true);
 
-    g.propiedades();
+    g.DFS('B');
 
     return EXIT_SUCCESS;
 }
