@@ -220,6 +220,27 @@ public:
         printf("es conexo");
         return true;
     }
+    
+      void grado(){
+        for(ni = nodes.begin(); ni != nodes.end(); ni++){
+            node* nodo = *ni;
+            char data=nodo->getData();
+            int salida=nodo->edges.size();
+            int entrada=0;
+            for(ei = nodo->edges.begin();ei!=nodo->edges.end();ei++){
+                node* otro = nodo->getOtherNode(*ei);
+                for(EdgeIte eite = otro->edges.begin();eite!=otro->edges.end();eite++){
+                    if(*eite == *ei){
+                        entrada++;
+                        break;
+                    }
+                }
+            }
+
+            cout<<"el nodo "<<data<<" tiene "<<salida<<" aristas de salida y "<<entrada<<" de entrada\n";
+        }
+    }
+
 
     self prim(N data){
         if(esDirigido) throw out_of_range("Prim no funciona en grafos dirigidos");
