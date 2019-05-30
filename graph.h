@@ -180,13 +180,15 @@ public:
 
     bool conexo(){
         //itero en cada nodo y va marcando cada arista que entra y sale
-        //si en algun momento nada entra ni sale de ese nodo entonces sabemos que es no conexo 
+        //si en algun momento nada entra ni sale de ese nodo entonces sabemos que es no conexo
         for(ni = nodes.begin(); ni != nodes.end(); ni++){
             bool salida=false;
             bool entrada=false;
+            //chequea las aristas de salida del nodo
             for(ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++){
                 salida=true;
             }
+            //itera en los demas nodos y chequea si es que sus aristas llegan al nodo del momento
             for (NodeIte ni1 = nodes.begin(); ni1 != nodes.end(); ni1++){
                 for(EdgeIte ei1 = (*ni1)->edges.begin(); ei1 != (*ni1)->edges.end(); ei1++){
                     if ((*ei1) -> nodes[1]==(*ni)){
