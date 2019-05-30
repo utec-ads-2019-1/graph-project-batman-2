@@ -396,6 +396,17 @@ public:
         }
     }
 
+<<<<<<< HEAD
+=======
+    void propiedades(){
+        printVE();
+        densidad();
+        conexo();
+        grado();
+
+    }
+
+>>>>>>> 763d1b3e811dbf3c9c34223b5d8c401089fc8e41
     ~Graph() {
         while (!nodes.empty()) {
             delete nodes.back();
