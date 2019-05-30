@@ -50,6 +50,7 @@ public:
             esDirigido = true;
             A->edges.push_back(ar);
         } else {
+
             A->edges.push_back(ar);
             B->edges.push_back(ar);
         }
@@ -190,10 +191,10 @@ public:
 
         //si el calculo es cercano a 0, es disperso, si es cercano a 1 es denso
         if (densidad >= 0.5) {
-            printf("DENSO (densidad = %f)\n", densidad);
+            printf("DENSO (densidad = %f)", densidad);
             return true;
         } else {
-            printf("DISPERSO (densidad = %f)\n", densidad);
+            printf("DISPERSO (densidad = %f)", densidad);
             return true;
         }
 
@@ -219,11 +220,11 @@ public:
                 }
             }
             if (!salida && !entrada) {
-                printf("no es conexo\n");
+                printf("no es conexo");
                 return false;
             }
         }
-        printf("es conexo\n");
+        printf("es conexo");
         return true;
     }
 
@@ -233,17 +234,12 @@ public:
             char data = nodo->getData();
             int salida = nodo->edges.size();
             int entrada = 0;
-            for (ei = nodo->edges.begin(); ei != nodo->edges.end(); ei++) {
-                node *otro = nodo->getOtherNode(*ei);
-                for (EdgeIte eite = otro->edges.begin(); eite != otro->edges.end(); eite++) {
-                    if (*eite == *ei) {
-                        entrada++;
-                        break;
-                    }
+            for (ei = edges.begin(); ei != edges.end(); ei++) {
+                edge *ar = *ei;
+                if(ar->nodes[1]==nodo){
+                    entrada++;
                 }
             }
-
-            cout << "el nodo " << data << " tiene " << salida << " aristas de salida y " << entrada << " de entrada\n";
         }
     }
 
@@ -398,12 +394,6 @@ public:
             }
             cout << endl;
         }
-    }
-
-    void propiedades(){
-        densidad();
-        conexo();
-        grado();
     }
 
     ~Graph() {
