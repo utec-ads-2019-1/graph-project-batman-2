@@ -15,13 +15,14 @@ int main(int argc, char *argv[]) {
     g.addNode('E');
 
 
-    g.addEdge(5, 'A', 'B');
-    g.addEdge(7, 'B', 'C');
-    g.addEdge(9, 'C', 'E');
-    g.addEdge(9, 'E', 'B');
-    g.addEdge(9, 'A', 'D');
-    g.addEdge(9, 'D', 'B');
+    g.addEdge(5, 'B', 'A', true);
+    g.addEdge(7, 'B', 'C', true);
+    g.addEdge(9, 'C', 'E', true);
+    g.addEdge(9, 'E', 'B', true);
+    g.addEdge(9, 'A', 'D', true);
+    g.addEdge(9, 'D', 'B', true);
 
+    g.propiedades();
 
     return EXIT_SUCCESS;
 }

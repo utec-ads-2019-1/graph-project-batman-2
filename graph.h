@@ -190,10 +190,10 @@ public:
 
         //si el calculo es cercano a 0, es disperso, si es cercano a 1 es denso
         if (densidad >= 0.5) {
-            printf("DENSO (densidad = %f)", densidad);
+            printf("DENSO (densidad = %f)\n", densidad);
             return true;
         } else {
-            printf("DISPERSO (densidad = %f)", densidad);
+            printf("DISPERSO (densidad = %f)\n", densidad);
             return true;
         }
 
@@ -219,11 +219,11 @@ public:
                 }
             }
             if (!salida && !entrada) {
-                printf("no es conexo");
+                printf("no es conexo\n");
                 return false;
             }
         }
-        printf("es conexo");
+        printf("es conexo\n");
         return true;
     }
 
@@ -398,6 +398,12 @@ public:
             }
             cout << endl;
         }
+    }
+
+    void propiedades(){
+        densidad();
+        conexo();
+        grado();
     }
 
     ~Graph() {
