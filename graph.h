@@ -179,6 +179,8 @@ public:
     }
 
     bool conexo(){
+        //itero en cada nodo y va marcando cada arista que entra y sale
+        //si en algun momento nada entra ni sale de ese nodo entonces sabemos que es no conexo 
         for(ni = nodes.begin(); ni != nodes.end(); ni++){
             bool salida=false;
             bool entrada=false;
