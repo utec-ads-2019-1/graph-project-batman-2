@@ -401,9 +401,11 @@ public:
     }
 
     void propiedades(){
+        printVE();
         densidad();
         conexo();
         grado();
+
     }
 
     ~Graph() {
