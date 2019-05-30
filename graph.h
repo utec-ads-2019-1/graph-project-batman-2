@@ -191,10 +191,10 @@ public:
 
         //si el calculo es cercano a 0, es disperso, si es cercano a 1 es denso
         if (densidad >= 0.5) {
-            printf("DENSO (densidad = %f)", densidad);
+            printf("DENSO (densidad = %f)\n", densidad);
             return true;
         } else {
-            printf("DISPERSO (densidad = %f)", densidad);
+            printf("DISPERSO (densidad = %f)\n", densidad);
             return true;
         }
 
@@ -220,11 +220,11 @@ public:
                 }
             }
             if (!salida && !entrada) {
-                printf("no es conexo");
+                printf("no es conexo\n");
                 return false;
             }
         }
-        printf("es conexo");
+        printf("es conexo\n");
         return true;
     }
 
@@ -240,6 +240,7 @@ public:
                     entrada++;
                 }
             }
+            cout<<"el nodo "<<nodo->getData()<<" tiene "<<entrada<<" de entrada y "<<salida<<" de salida\n";
         }
     }
 
@@ -326,8 +327,8 @@ public:
         return krus;
     }
 
-    void BFS(N data) {
-        map<N, bool> visited;
+    EdgeSeq BFS(N data) {
+        map<N, bool> visited;//crea un mapa <nombre de nodo, false> con todos los nodos
         for (ni = nodes.begin(); ni != nodes.end(); ni++)
             visited[(*ni)->getData()] = false;
 
@@ -351,9 +352,10 @@ public:
             }
 
         }
+
     }
 
-    void DFS(N data){
+    NodeSeq DFS(N data){
         //crea un vector para los visitados, tamanio la cantidad de nodos y rellenalo con false
         NodeSeq visited;
         stack<N> daStack;
@@ -384,6 +386,7 @@ public:
         for(ni = visited.begin(); ni != visited.end(); ni++){
             cout << (*ni)->getData() << endl;
         }
+        return visited;
     }
 
     void printVE() {
@@ -396,8 +399,7 @@ public:
         }
     }
 
-<<<<<<< HEAD
-=======
+
     void propiedades(){
         printVE();
         densidad();
@@ -406,7 +408,6 @@ public:
 
     }
 
->>>>>>> 763d1b3e811dbf3c9c34223b5d8c401089fc8e41
     ~Graph() {
         while (!nodes.empty()) {
             delete nodes.back();
