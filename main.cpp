@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
     g.addNode('D');
     g.addNode('E');
 
+
     g.addEdge(5, 'A', 'B');
     g.addEdge(7, 'B', 'C');
     g.addEdge(9, 'C', 'E');
