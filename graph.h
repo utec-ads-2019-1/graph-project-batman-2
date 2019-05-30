@@ -120,12 +120,22 @@ public:
     }
 
 
-    bool node_exists(NodeSeq nodes, node node){
+    bool node_exists(NodeSeq nodes, node *node){
         for(NodeIte nodeIte = nodes.begin(); nodeIte != nodes.end(); nodeIte++){
             if(*nodeIte == node){
                 return true;
             }
         }
+        return false;
+    }
+
+    bool edge_exists(EdgeSeq edges, edge *edge){
+        for(EdgeIte edgeIte = edges.begin(); edgeIte != edges.end(); edgeIte++){
+            if(*edgeIte == edge){
+                return true;
+            }
+        }
+        return false;
     }
 
     bool searchNode(N data, node* &node){
@@ -175,9 +185,100 @@ public:
 
     }
 
+    self prim(N data){
+        /*self mst;
+        node *node1;
+        searchNode(data, node1);
+        mst.nodes.push_back(node1);
+        EdgeSeq queue;
 
-    self prim(node vertice){
+        while(mst.nodes.size() < nodes.size())    {
+            for(ni = mst.nodes.begin(); ni != mst.nodes.end(); ni++){
+                node *temp = *ni;
+                for(ei = temp->edges.begin(); ei != temp->edges.end(); ei++){
+                    edge *temp2 = *ei;
+                    if(!edge_exists(queue, temp2)){
+                        queue.push_back(temp2);
+                    }
+                }
+            }
+            int i = 0;
+            EdgeIte queueIte = queue.begin();
+            edge *minEdge = *queueIte;
+            for(ei = queue.begin(); ei != queue.end();ei++){
+                edge* temp = *ei;
+                if(!node_exists(mst.nodes, temp->nodes[0]) || !node_exists(mst.nodes, temp->nodes[1])){
+                    cout << temp->getWeight() << " " << minEdge->getWeight() << endl;
+                    if(temp->getWeight() < minEdge->getWeight()){
+                            minEdge = temp;
+                        }
+                }
+            }
+            queueIte++;
+            for(int i = 0; i < 2; i++){
+                if(!node_exists(mst.nodes, minEdge->nodes[i])){
+                    mst.nodes.push_back(minEdge->nodes[i]);
+                }
+            }
+            mst.edges.push_back(minEdge);
+            cout << mst.nodes.size() << endl;
+        }
+        for(ni = mst.nodes.begin(); ni != mst.nodes.end(); ni++){
+            node *temp = *ni;
+        }
+        for(ei = mst.edges.begin(); ei != mst.edges.end(); ei++){
+            edge *temp = *ei;
+            cout << temp->nodes[0]->getData() << " " <<  temp->getWeight() << " " << temp->nodes[1]->getData() << "|";
+        }
+        cout << endl;
+        return mst;*/
+        self mst;
+        EdgeSeq temp;
+        EdgeSeq opciones;
+        node *vertice;
+        searchNode(data, vertice);
+        mst.nodes.push_back(vertice);
 
+        while(mst.nodes.size() < nodes.size()){
+            //Se agregan todas las aristas a temp
+            for(ei = edges.begin(); ei != edges.end(); ei++){
+                temp.push_back(*ei);
+            }
+            //Se agregan las aristas que puedo tomar a opciones
+            for(ni = mst.nodes.begin(); ni != mst.nodes.end(); ni++){
+                for(ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++){
+                    if(!edge_exists(opciones, *ei) && !edge_exists(mst.edges, *ei)){
+                        opciones.push_back(*ei);
+                    }
+                }
+            }
+            //Se encuentra la menor arista de temp y se verifica si esta entre opciones
+            int n = mst.edges.size()+1;
+            while(mst.edges.size() < n) {
+                edge *minEdge = *(temp.begin());
+                if (edge_exists(opciones, minEdge) && !edge_exists(mst.edges, minEdge)) {
+                    if(!node_exists(mst.nodes, minEdge->nodes[0])) {
+                        mst.nodes.push_back(minEdge->nodes[0]);
+                    }
+                    if(!node_exists(mst.nodes, minEdge->nodes[1])) {
+                        mst.nodes.push_back(minEdge->nodes[1]);
+                    }
+                    mst.edges.push_back(minEdge);
+                }
+                //Si no esta, se borra y se busca la siguiente
+                else {
+                    temp.erase(temp.begin());
+                }
+            }
+            //se libera el temp para ser llenado de nuevo
+            temp.clear();
+        }
+
+        for(ei = mst.edges.begin(); ei != mst.edges.end(); ei++){
+            edge *temp1 = *ei;
+            cout << temp1->nodes[0]->getData() << " " <<  temp1->getWeight() << " " << temp1->nodes[1]->getData() << "|";
+        }
+        return mst;
     }
 
     self kruskal(){
