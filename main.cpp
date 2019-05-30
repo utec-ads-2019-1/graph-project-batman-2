@@ -22,6 +22,6 @@ int main(int argc, char *argv[]) {
     g.addEdge(9, 'A', 'D');
     g.addEdge(9, 'D', 'B');
 
-    g.conexo();
+
     return EXIT_SUCCESS;
 }

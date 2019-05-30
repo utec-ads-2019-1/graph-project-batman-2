@@ -35,8 +35,8 @@ public:
     Graph(): esDirigido(false){};
 
 
-    edge* addEdge(E weight, N dataA, N dataB){
-        edge *ar = new edge(weight);
+    edge* addEdge(E weight, N dataA, N dataB, bool dir=false){
+        edge *ar = new edge(weight,dir);
 
         node* A;
         node* B;
@@ -46,8 +46,13 @@ public:
         ar->nodes[0]=A;
         ar->nodes[1]=B;
 
-        A->edges.push_back(ar);
-        B->edges.push_back(ar);
+        if(dir) {
+            esDirigido=true;
+            A->edges.push_back(ar);
+        } else {
+            A->edges.push_back(ar);
+            B->edges.push_back(ar);
+        }
 
        if(edges.size()>0) {
             for (ei = edges.begin(); ei != edges.end(); ei++) {
@@ -217,52 +222,7 @@ public:
     }
 
     self prim(N data){
-        /*self mst;
-        node *node1;
-        searchNode(data, node1);
-        mst.nodes.push_back(node1);
-        EdgeSeq queue;
-
-        while(mst.nodes.size() < nodes.size())    {
-            for(ni = mst.nodes.begin(); ni != mst.nodes.end(); ni++){
-                node *temp = *ni;
-                for(ei = temp->edges.begin(); ei != temp->edges.end(); ei++){
-                    edge *temp2 = *ei;
-                    if(!edge_exists(queue, temp2)){
-                        queue.push_back(temp2);
-                    }
-                }
-            }
-            int i = 0;
-            EdgeIte queueIte = queue.begin();
-            edge *minEdge = *queueIte;
-            for(ei = queue.begin(); ei != queue.end();ei++){
-                edge* temp = *ei;
-                if(!node_exists(mst.nodes, temp->nodes[0]) || !node_exists(mst.nodes, temp->nodes[1])){
-                    cout << temp->getWeight() << " " << minEdge->getWeight() << endl;
-                    if(temp->getWeight() < minEdge->getWeight()){
-                            minEdge = temp;
-                        }
-                }
-            }
-            queueIte++;
-            for(int i = 0; i < 2; i++){
-                if(!node_exists(mst.nodes, minEdge->nodes[i])){
-                    mst.nodes.push_back(minEdge->nodes[i]);
-                }
-            }
-            mst.edges.push_back(minEdge);
-            cout << mst.nodes.size() << endl;
-        }
-        for(ni = mst.nodes.begin(); ni != mst.nodes.end(); ni++){
-            node *temp = *ni;
-        }
-        for(ei = mst.edges.begin(); ei != mst.edges.end(); ei++){
-            edge *temp = *ei;
-            cout << temp->nodes[0]->getData() << " " <<  temp->getWeight() << " " << temp->nodes[1]->getData() << "|";
-        }
-        cout << endl;
-        return mst;*/
+        if(esDirigido) throw out_of_range("Prim no funciona en grafos dirigidos");
         self mst;
         EdgeSeq temp;
         EdgeSeq opciones;
@@ -305,14 +265,15 @@ public:
             temp.clear();
         }
 
-        for(ei = mst.edges.begin(); ei != mst.edges.end(); ei++){
+        /*for(ei = mst.edges.begin(); ei != mst.edges.end(); ei++){
             edge *temp1 = *ei;
             cout << temp1->nodes[0]->getData() << " " <<  temp1->getWeight() << " " << temp1->nodes[1]->getData() << "|";
-        }
+        }*/
         return mst;
     }
 
     self kruskal(){
+        if(esDirigido) throw out_of_range("Kruskal no funciona en grafos dirigidos");
         map<N,bool> visited;
         for(ni = nodes.begin();ni!=nodes.end();ni++)
             visited[(*ni)->getData()]=false; //crea un mapa <nombre de nodo, false> con todos los nodos
@@ -360,9 +321,7 @@ public:
             queue.pop_front();
             for (ei = nodo->edges.begin(); ei != nodo->edges.end(); ei++)
             {
-
                 node* otro = nodo->getOtherNode(*ei);
-
                 bool visitado = visited[otro->getData()];
                 if (!visitado)
                 {
