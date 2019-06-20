@@ -129,7 +129,6 @@ public:
         return false;
     }
 
-
     bool node_exists(NodeSeq nodes, node *node) {
         for (NodeIte nodeIte = nodes.begin(); nodeIte != nodes.end(); nodeIte++) {
             if (*nodeIte == node) {
@@ -171,7 +170,6 @@ public:
         }
         return false;
     }
-
 
     bool densidad() {
         //chequear si es denso o disperso
@@ -243,7 +241,6 @@ public:
             cout<<"el nodo "<<nodo->getData()<<" tiene "<<entrada<<" de entrada y "<<salida<<" de salida\n";
         }
     }
-
 
     self prim(N data) {
         if (esDirigido) throw out_of_range("Prim no funciona en grafos dirigidos");
@@ -402,6 +399,28 @@ public:
         }
     }
 
+    self a_star(N data_start, N data_final){
+        Node start;
+        Node final;
+        searchNode(data_start, start);
+        searchNode(data_final, final);
+        Node current = start;
+        while(current != end){
+
+        }
+        return self;
+    }
+
+    self dijkstra(N data){
+        Node start;
+        Node current = start;
+        NodeSeq visited;
+        NodeSeq unvisited = nodes;
+        searchNode(data, start);
+        while(unvisited.size() > 0){
+
+        }
+    }
 
     void propiedades(){
         printVE();
