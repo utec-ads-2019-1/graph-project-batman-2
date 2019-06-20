@@ -1,37 +1,18 @@
 GRAPH PROJECT TODO LIST:
 ----------------------------------
 
-	-constructor/destructor (v)
-	-insertar (v) 
-		+vertices (v)
-		+aristas  (v)
-	-remover (v)
-		+vertices (v)
-		+aristas (v)
-	-buqueda (v)
-		+vertices (v)
-		+aristas (v)
-	-propiedades 
-		+densidad (chequear si es denso o disperso) (v)
-		+tipo y grado de vertices
-		+conectividad
-			*conexo (v)
-			*fuertemente conexo
-			*bipartito
-	-MST
-		+prim
-		+kruskal (v)
-	-busqueda 
-		+BFS(anchura) (v)
-		+DFS(profundidad) 
+Proyecto 2
+➔ Implementación del camino más corto en grafos
+➔ La implementación será para un grafo simple (no loops, ni multi-aristas) 
+➔ Será una continuación del trabajo parcial de grafos
+➔ Debe incluir visualización ya sea con OpenGL o una librería similar (en C++)
+➔ El grafo deberá cargarse de un archivo
 
-A tomar en consideracion:
-~implementacion por lista de adyaencia
-~solo grafos simples(no loops/no multiaristas)
-~se debe poder trabajar con grafo dirigido o no dirigido
-~usar typetraits para definir el tipo de los nodos(floats,ints..)
-~usar opengl para visualizar el grafo
-
-Prioridades:
-1.-Creacion del grafo
-2.-Funcionalidades
+Fecha de entrega:
+➔ Martes 2 de Julio, 8pm (antes de clase)
+ 
+Funciones a implementar:
+◆Dijkstra
+◆A* (paralelo, múltiples búsquedas)
+◆Floyd-Warshall
+◆Bellman-Ford (investigar)
