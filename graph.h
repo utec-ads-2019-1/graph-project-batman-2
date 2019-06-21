@@ -5,6 +5,7 @@
 #include <list>
 #include <map>
 #include <stack>
+#include <cmath>
 
 #include "node.h"
 #include "edge.h"
@@ -69,8 +70,8 @@ public:
         return ar;
     }
 
-    node *addNode(N data) {
-        node *nodo = new node(data);
+    node *addNode(N data, double x, double y) {
+        node *nodo = new node(data,x,y);
         nodes.push_back(nodo);
         return nodo;
     }
@@ -96,6 +97,10 @@ public:
                 edges.erase(ei);
             }
         }
+    }
+
+    double getDistance(node* A,node* B){
+        return sqrt( pow(B->getX()-A->getX(),2) + pow(B->getY()-A->getY(),2));
     }
 
     bool removeNode(N data) {
@@ -400,20 +405,56 @@ public:
     }
 
     self a_star(N data_start, N data_final){
-        Node start;
-        Node final;
+        node* start;
+        node* final;
+        self grafo;
+        NodeSeq visited;
+        NodeSeq unvisited = nodes;
+        //Se crea un puntero al nodo inicial y al final
         searchNode(data_start, start);
         searchNode(data_final, final);
-        Node current = start;
-        while(current != end){
+        //Se crea un puntero a nodo current que se movera desde el nodo inicial hasta el final y una variable suma que ira sumando la distancia recorrida
+        node* current = start;
+        int suma = 0;
+        //Mientras current no llegue al final, se repetira la siguiente seccion
+        while(current != final){
+            cout << current->getData() << endl;
+            //Se crea un puntero a la primera arista del nodo current, y se asume que esta es la preferida. Se asume tambien su distancia total como la menor
+            edge* preferred = *(current->edges.begin());
+            int minDist = preferred->getWeight() + suma + getDistance(current->getOtherNode(preferred),final);
+            //Se recorren todas las aristas que salen del nodo current.
+            for(ei=current->edges.begin();ei!=current->edges.end();ei++){
+                node* other = current->getOtherNode(*ei);
+                //Si el nodo al otro lado de la arista es el fina, se toma como preferido
+                if(other==final){
+                    preferred=*ei;
+                    break;
+                }
+                //Sino, se compara su distancia total con la preferida, y si es menor se toma como preferida la nueva distancia
+                int dist = getDistance(other,final) + suma + (*ei)->getWeight();
+                 if(dist<minDist){
+                     preferred = *ei;
+                     minDist=dist;
+                 }
+            }
 
+            //Se agrega el nodo al otro lado de la arista preferida a la lista de nodos visitados y se remueve de los no visitados.
+            node* newNode = current->getOtherNode(preferred);
+            visited.push_back(newNode);
+            for(ni=unvisited.begin();ni!=unvisited.end();ni++){
+                if(*ni == newNode){
+                    unvisited.erase(ni);
+                }
+            }
+            //Se asigna current al nuevo nodo
+            current = newNode;
         }
-        return self;
+        return *this;
     }
 
     self dijkstra(N data){
-        Node start;
-        Node current = start;
+        node start;
+        node current = start;
         NodeSeq visited;
         NodeSeq unvisited = nodes;
         searchNode(data, start);
