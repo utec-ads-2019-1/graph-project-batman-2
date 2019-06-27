@@ -22,7 +22,8 @@ int main(int argc, char *argv[]) {
     g.addEdge(9, 'A', 'D', true);
     g.addEdge(9, 'D', 'B', true);
 
-    g.a_star('A', 'C');
+    graph f = g.a_star('A', 'C');
+    cout << f.getSize() << endl;
 
     return EXIT_SUCCESS;
 }
