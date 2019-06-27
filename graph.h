@@ -5,7 +5,8 @@
 #include <list>
 #include <map>
 #include <stack>
-
+#include <cmath>
+#include <limits>
 #include "node.h"
 #include "edge.h"
 
@@ -35,6 +36,9 @@ public:
     Graph() : esDirigido(false) {};
 
 
+    int getSize(){
+        return nodes.size();
+    }
     edge *addEdge(E weight, N dataA, N dataB, bool dir = false) {
         edge *ar = new edge(weight, dir);
 
@@ -69,8 +73,8 @@ public:
         return ar;
     }
 
-    node *addNode(N data) {
-        node *nodo = new node(data);
+    node *addNode(N data, double x, double y) {
+        node *nodo = new node(data,x,y);
         nodes.push_back(nodo);
         return nodo;
     }
@@ -96,6 +100,10 @@ public:
                 edges.erase(ei);
             }
         }
+    }
+
+    double getDistance(node* A,node* B){
+        return sqrt( pow(B->getX()-A->getX(),2) + pow(B->getY()-A->getY(),2));
     }
 
     bool removeNode(N data) {
@@ -400,28 +408,132 @@ public:
     }
 
     self a_star(N data_start, N data_final){
-        Node start;
-        Node final;
+        node* start;
+        node* final;
+        self grafo;
+        NodeSeq visited;
+        NodeSeq unvisited = nodes;
+        //Se crea un puntero al nodo inicial y al final
         searchNode(data_start, start);
         searchNode(data_final, final);
-        Node current = start;
-        while(current != end){
-
+        grafo.addNode(start->getData(), start->getX(), start->getY());
+        cout << "starting at " << start->getData() << " and ending at " << final->getData() << endl;
+        //Se crea un puntero a nodo current que se movera desde el nodo inicial hasta el final y una variable suma que ira sumando la distancia recorrida
+        node* current = start;
+        int suma = 0;
+        //Mientras current no llegue al final, se repetira la siguiente seccion
+        while(current != final){
+            cout << "current node " << current->getData() << endl;
+            //Se crea un puntero a la primera arista del nodo current, y se asume que esta es la preferida. Se asume tambien su distancia total como la menor
+            edge* preferred = *(current->edges.begin());
+            int minDist = preferred->getWeight() + suma + getDistance(current->getOtherNode(preferred),final);
+            //Se recorren todas las aristas que salen del nodo current.
+            for(ei=current->edges.begin();ei!=current->edges.end();ei++){
+                node* other = current->getOtherNode(*ei);
+                //Si el nodo al otro lado de la arista es el fina, se toma como preferido
+                if(other==final){
+                    cout << other->getData() << " es final" << endl;
+                    preferred=*ei;
+                    break;
+                }
+                //Sino, se compara su distancia total con la preferida, y si es menor se toma como preferida la nueva distancia
+                int dist = getDistance(other,final) + suma + (*ei)->getWeight();
+                 if(dist<minDist){
+                     preferred = *ei;
+                     minDist=dist;
+                 }
+            }
+            //Se agrega el nodo al otro lado de la arista preferida a la lista de nodos visitados y se remueve de los no visitados.
+            node* newNode = current->getOtherNode(preferred);
+            visited.push_back(newNode);
+            int count = 0;
+            for(ni=unvisited.begin();ni!=unvisited.end();ni++){
+                cout << "loop" << endl;
+                if(*ni == newNode){
+                    cout << (*(unvisited.begin()+count))->getData() << endl;
+                    unvisited.erase(unvisited.begin() + count);
+                    break;
+                }
+                count++;
+            }
+            //Se asigna current al nuevo nodo
+            current = newNode;
+            cout << current->getData() << endl;
         }
-        return self;
+        for(ni = visited.begin(); ni != visited.end(); ni++) {
+            grafo.addNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
+        }
+        cout << "nodes in order" << endl;
+        for(ni = grafo.nodes.begin(); ni != grafo.nodes.end(); ni++){
+            cout << (*ni)->getData() << endl;
+        }
+        cout << "hola" << endl;
+        return grafo;
     }
 
     self dijkstra(N data){
-        Node start;
-        Node current = start;
+        node* start;
         NodeSeq visited;
         NodeSeq unvisited = nodes;
+        self grafo;
         searchNode(data, start);
-        while(unvisited.size() > 0){
-
+        node* current = start;
+        map<N,int> caminos;
+        map<N,int>::iterator mi;
+        //Llenar el mapa con un key para cada nodo y un valor cero para el inicial e infinito para el resto
+        for(ni = nodes.begin(); ni != nodes.end(); ni++){
+            if(*ni == current){
+                caminos[(*ni)->getData()] = 0;
+                cout << " set with 0 " << endl;
+            }
+            else {
+                caminos[(*ni)->getData()] = 1000000;
+                cout << " set with 1000000 " << endl;
+            }
         }
+        //Mientras se tengan nodos no visitados, repetir los siguietes pasos
+        while(unvisited.size() > 0){
+            grafo.addNode(current->getData(), current->getX(), current->getY());
+            for(ei = current->edges.begin(); ei != current->edges.end(); ei++){
+                //Si el nodo al otro lado de la arista no ha sido visitado, se compara su valor en el mapa y si es menor se cambia
+                if(!node_exists(visited, current->getOtherNode(*ei))){
+                    int sum = (*ei)->getWeight() + caminos.find(current->getData())->second;
+                    if(sum < caminos.find(current->getOtherNode(*ei)->getData())->second) {
+                        caminos.find(current->getOtherNode(*ei)->getData())->second = sum;
+                    }
+                }
+            }
+            edge* preferred = *(current->edges.begin());
+            node* other;
+            for(ei = current->edges.begin(); ei != current->edges.end(); ei++){
+                 other = current->getOtherNode(*ei);
+                if(node_exists(unvisited, other) && (*ei)->getWeight() < preferred->getWeight()){
+                    preferred = *ei;
+                }
+            }
+            //borrar current de unvisited, agregarlo a visited y agregar la arista al grafo
+            for(ni = unvisited.begin(); ni != unvisited.end(); ni++){
+                if(*ni == current){
+                    unvisited.erase(ni);
+                }
+            }
+            visited.push_back(current);
+            grafo.edges.push_back(preferred);
+            current = current->getOtherNode(preferred);
+        }
+        for(mi = caminos.begin(); mi != caminos.end(); mi++){
+            cout << mi->second << endl;
+        }
+        return grafo;
     }
 
+    self floydWarshall(){
+        return *this;
+    }
+
+    self bellmanFord(){
+        return *this;
+    }
     void propiedades(){
         printVE();
         densidad();
