@@ -1,6 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 #include <list>
+#include <map>
 
 using namespace std;
 
@@ -11,14 +12,21 @@ class Node {
         typedef typename G::E E;
         typedef typename G::edge edge;
         typedef typename G::EdgeSeq EdgeSeq;
-
+        typedef typename EdgeSeq::iterator EdgeIte;
         EdgeSeq edges;
 
 
-        Node(N data) : data(data) {};
+        Node(N data,double x, double y) : data(data), x(x),y(y) {};
 
         N getData(){
             return data;
+        }
+
+        double getX(){
+            return x;
+        }
+        double getY(){
+            return y;
         }
 
 
