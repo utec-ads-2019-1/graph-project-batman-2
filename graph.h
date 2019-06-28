@@ -7,6 +7,7 @@
 #include <stack>
 #include <cmath>
 #include <limits>
+#include <pthread.h>
 #include "node.h"
 #include "edge.h"
 
@@ -479,7 +480,7 @@ public:
         searchNode(data, start);
         node* current = start;
         map<N,int> caminos;
-        map<N,int>::iterator mi;
+        map<N,int>::iterator;
         //Llenar el mapa con un key para cada nodo y un valor cero para el inicial e infinito para el resto
         for(ni = nodes.begin(); ni != nodes.end(); ni++){
             if(*ni == current){
@@ -521,7 +522,7 @@ public:
             grafo.edges.push_back(preferred);
             current = current->getOtherNode(preferred);
         }
-        for(mi = caminos.begin(); mi != caminos.end(); mi++){
+        for(NodeSeq mi = caminos.begin(); mi != caminos.end(); mi++){
             cout << mi->second << endl;
         }
         return grafo;
