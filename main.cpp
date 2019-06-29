@@ -15,15 +15,15 @@ int main(int argc, char *argv[]) {
     g.addNode('E', 5, 2);
 
 
-    g.addEdge(5, 'B', 'A', true);
-    g.addEdge(7, 'B', 'C', true);
-    g.addEdge(9, 'C', 'E', true);
-    g.addEdge(9, 'E', 'B', true);
-    g.addEdge(9, 'A', 'D', true);
-    g.addEdge(9, 'D', 'B', true);
+    g.addEdge(5, 'B', 'A', false);
+    g.addEdge(7, 'B', 'C', false);
+    g.addEdge(9, 'C', 'E', false);
+    g.addEdge(9, 'E', 'B', false);
+    g.addEdge(9, 'A', 'D', false);
+    g.addEdge(9, 'D', 'B', false);
 
-    graph f = g.a_star('A', 'C');
-    cout << f.getSize() << endl;
+    g.dijkstra('A');
+
 
     return EXIT_SUCCESS;
 }
