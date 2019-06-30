@@ -7,7 +7,8 @@
 #include <stack>
 #include <cmath>
 #include <limits>
-#include <pthread.h>
+//#include <pthread.h>
+#include <climits>
 #include "node.h"
 #include "edge.h"
 
@@ -528,8 +529,71 @@ public:
         return grafo;
     }
 
-    self floydWarshall(){
-        return *this;
+
+
+    int getEdgeBetween(node* node1, node* node2){
+        if(node1 == node2) return 0;
+
+        for(ei = node1->edges.begin(); ei != node1->edges.end(); ei++){
+            if (node1->getOtherNode(*ei) == node2){
+                return (*ei)->getWeight();
+            }
+        }
+        return 999;
+    }
+
+    pair<vector<vector<int>>, vector<vector<int>>> floyd() {
+        //creo 2 matrices de vectores tamanio mi cantidad de nodos
+        vector<vector<int>> m1(nodes.size(), vector<int>(nodes.size()));//caminos
+        vector<vector<int>> m2(nodes.size(), vector<int>(nodes.size()));//pasos
+
+        //relleno matrices, si es la diagonal la llena de 0
+        int i =0;
+        for (ni = nodes.begin(); ni != nodes.end(); ni++) {
+            int j=0;
+            for (NodeIte ni2 = nodes.begin(); ni2 != nodes.end(); ni2++) {
+                if (i != j){
+                    m1[i][j] = getEdgeBetween((*ni), (*ni2));//getEdgeBetween(i,j); //relleno la matriz 1
+                    m2[i][j] = j+1; //relleno matriz 2 con el valor de la columna
+                }
+                j++;
+            }
+            i++;
+        }
+
+        //calcular cruces y guardar resultados en la m1 y m2
+        for(int l = 0; l < nodes.size(); l++){
+            for(int j = 0; j < nodes.size(); j++){
+                for(int k = 0; k < nodes.size(); k++){
+                    int distance = m1[j][l] + m1[l][k];
+                    if(distance < m1[j][k] && distance != 0){
+                        m1[j][k] = distance;
+                        m2[j][k] = l+1;
+                    }
+                }
+            }
+        }
+
+        //prints
+        cout<<"matriz 1:\n";
+        for (int l = 0; l < nodes.size(); ++l) {
+            for (int j = 0; j < nodes.size(); ++j) {
+                cout<<m1[l][j]<<"\t\t\t";
+            }
+            cout<<"\n";
+        }
+
+        cout<<"\n\n";
+
+        cout<<"matriz 2:\n";
+        for (int l = 0; l < nodes.size(); ++l) {
+            for (int j = 0; j < nodes.size(); ++j) {
+                cout<<m2[l][j]<<"\t";
+            }
+            cout<<"\n";
+        }
+
+        return make_pair(m1,m2);
     }
 
     self bellmanFord(){
