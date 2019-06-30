@@ -14,6 +14,13 @@ class Edge {
         E getWeight(){
             return weight;
         }
+
+        bool findEdge(int node1, int node2){
+            node* n;
+
+        }
+
+
     private:
         E weight;
         bool dir;
