@@ -534,11 +534,11 @@ public:
                         min = *ni;
                     }
                 }
-                /*for(ei = current->edges.begin(); ei != current->edges.end(); ei++){
+                for(ei = current->edges.begin(); ei != current->edges.end(); ei++){
                     if(current->getOtherNode(*ei) == min) {
                         grafo.addEdge((*ei)->getWeight(), current->getData(), min->getData(), false);
                     }
-                }*/
+                }
                 /*if(!node_exists(visited, current))*/ visited.push_back(current);
                 current = min;
             }
@@ -557,11 +557,12 @@ public:
         return *this;
     }
 
-    self bellmanFord(N data){
+    map<N,int> bellmanFord(N data){
         node* start;
         searchNode(data, start);
         node* current = start;
         map<N,int> caminos;
+        map<N,int>::iterator mi;
         for(ni = nodes.begin(); ni != nodes.end(); ni++){
             if(*ni == current){
                 caminos[(*ni)->getData()] = 0;
@@ -572,8 +573,21 @@ public:
         }
 
         for(int i = 0; i < nodes.size(); i++){
-            for(ni = nodes.begin(); )
+            for(ni = nodes.begin(); ni != nodes.end(); ni++){
+                current = *ni;
+                for(ei = current->edges.begin(); ei != current->edges.end(); ei++){
+                    //Se compara el valor del nodo al otro lado de la arista en el mapa y si es menor se cambia
+                    int sum = (*ei)->getWeight() + caminos.find(current->getData())->second;
+                    if(sum < caminos.find(current->getOtherNode(*ei)->getData())->second) {
+                        caminos.find(current->getOtherNode(*ei)->getData())->second = sum;
+                    }
+                }
+            }
         }
+        for(mi = caminos.begin(); mi != caminos.end(); mi++){
+            cout << mi->first << " " << mi->second << endl;
+        }
+        return caminos;
     }
 
     void propiedades(){
