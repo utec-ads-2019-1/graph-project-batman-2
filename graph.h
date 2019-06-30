@@ -499,6 +499,7 @@ public:
         node* start;
         NodeSeq visited;
         NodeSeq unvisited = nodes;
+        EdgeSeq graphEdges;
         self grafo;
         searchNode(data, start);
         node* current = start;
@@ -536,12 +537,15 @@ public:
                 }
                 for(ei = current->edges.begin(); ei != current->edges.end(); ei++){
                     if(current->getOtherNode(*ei) == min) {
-                        grafo.addEdge((*ei)->getWeight(), current->getData(), min->getData(), false);
+                        graphEdges.push_back(*ei);
                     }
                 }
                 /*if(!node_exists(visited, current))*/ visited.push_back(current);
                 current = min;
             }
+        }
+        for(ei = graphEdges.begin(); ei != graphEdges.end(); ei++){
+            grafo.addEdge((*ei)->getWeight(), (*ei)->nodes[0]->getData(), (*ei)->nodes[1]->getData(), esDirigido);
         }
         cout << "visited" << endl;
         for(ni = visited.begin(); ni != visited.end(); ni++){
