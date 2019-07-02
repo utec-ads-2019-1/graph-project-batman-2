@@ -2,10 +2,12 @@
 #define GRAPH_H
 
 #include <vector>
+#include <iostream>
 #include <list>
 #include <map>
 #include <stack>
 #include <cmath>
+#include <iterator>
 #include <limits>
 //#include <pthread.h>
 #include <climits>
@@ -488,8 +490,7 @@ public:
     }
 
     int findPath(map<N,int> &map1, node* node){
-        map<N,int>::iterator mi;
-        for(mi = map1.begin(); mi != map1.end(); mi++){
+        for(auto mi = map1.begin(); mi != map1.end(); mi++){
             if(mi->first == node->getData()){
                 return mi->second;
             }
@@ -504,9 +505,7 @@ public:
         searchNode(data, start);
         node* current = start;
         map<N,int> caminos;
-        map<N,int>::iterator mi;
         map<node*, node*> parents;
-        map<node*,node*>::iterator pi;
 
         //Llenar el mapa con un key para cada nodo y un valor cero para el inicial e infinito para el resto
         for(ni = nodes.begin(); ni != nodes.end(); ni++){
@@ -544,7 +543,7 @@ public:
                 current = min;
             }
         }
-        for(pi = parents.begin(); pi != parents.end(); pi++){
+        for(auto pi = parents.begin(); pi != parents.end(); pi++){
             node* node1 = pi->first;
             node* node2 = pi->second;
             if(node2 != nullptr && node1 != node2) {
@@ -560,7 +559,7 @@ public:
         for(ei = grafo.edges.begin(); ei != grafo.edges.end(); ei++){
             cout << (*ei)->nodes[0]->getData() << " " << (*ei)->getWeight() << " " << (*ei)->nodes[1]->getData() << "|";
         }
-        for(mi = caminos.begin(); mi != caminos.end(); mi++){
+        for(auto mi = caminos.begin(); mi != caminos.end(); mi++){
             cout << mi->first << " " << mi->second << endl;
         }
         return grafo;
@@ -646,7 +645,6 @@ public:
         searchNode(data, start);
         node* current = start;
         map<N,int> caminos;
-        map<N,int>::iterator mi;
         for(ni = nodes.begin(); ni != nodes.end(); ni++){
             if(*ni == current){
                 caminos[(*ni)->getData()] = 0;
@@ -668,7 +666,7 @@ public:
                 }
             }
         }
-        for(mi = caminos.begin(); mi != caminos.end(); mi++){
+        for(auto mi = caminos.begin(); mi != caminos.end(); mi++){
             cout << mi->first << " " << mi->second << endl;
         }
         return caminos;
