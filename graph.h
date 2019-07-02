@@ -8,6 +8,7 @@
 #include <cmath>
 #include <limits>
 //#include <pthread.h>
+#include <climits>
 #include "node.h"
 #include "edge.h"
 
@@ -157,9 +158,9 @@ public:
         return false;
     }
 
-    bool edge_exists(EdgeSeq edges, edge *edge) {
+    bool edge_exists(EdgeSeq edges, edge *edge1) {
         for (EdgeIte edgeIte = edges.begin(); edgeIte != edges.end(); edgeIte++) {
-            if (*edgeIte == edge) {
+            if (*edgeIte == edge1) {
                 return true;
             }
         }
@@ -499,12 +500,13 @@ public:
         node* start;
         NodeSeq visited;
         NodeSeq unvisited = nodes;
-        EdgeSeq graphEdges;
         self grafo;
         searchNode(data, start);
         node* current = start;
         map<N,int> caminos;
         map<N,int>::iterator mi;
+        map<node*, node*> parents;
+        map<node*,node*>::iterator pi;
 
         //Llenar el mapa con un key para cada nodo y un valor cero para el inicial e infinito para el resto
         for(ni = nodes.begin(); ni != nodes.end(); ni++){
@@ -514,7 +516,9 @@ public:
             else {
                 caminos[(*ni)->getData()] = 1000000;
             }
+            parents[*ni] = nullptr;
         }
+        parents[current] = current;
         //Mientras se tengan nodos no visitados, repetir los siguietes pasos
         while(unvisited.size() > 0){
             grafo.addNode(current->getData(), current->getX(), current->getY());
@@ -523,6 +527,7 @@ public:
                 int sum = (*ei)->getWeight() + caminos.find(current->getData())->second;
                 if(sum < caminos.find(current->getOtherNode(*ei)->getData())->second) {
                     caminos.find(current->getOtherNode(*ei)->getData())->second = sum;
+                    parents[current->getOtherNode(*ei)] = current;
                 }
             }
             removeNode_from_seq(unvisited, current);
@@ -535,21 +540,25 @@ public:
                         min = *ni;
                     }
                 }
-                for(ei = current->edges.begin(); ei != current->edges.end(); ei++){
-                    if(current->getOtherNode(*ei) == min) {
-                        graphEdges.push_back(*ei);
-                    }
-                }
-                /*if(!node_exists(visited, current))*/ visited.push_back(current);
+                visited.push_back(current);
                 current = min;
             }
         }
-        for(ei = graphEdges.begin(); ei != graphEdges.end(); ei++){
-            grafo.addEdge((*ei)->getWeight(), (*ei)->nodes[0]->getData(), (*ei)->nodes[1]->getData(), esDirigido);
+        for(pi = parents.begin(); pi != parents.end(); pi++){
+            node* node1 = pi->first;
+            node* node2 = pi->second;
+            if(node2 != nullptr && node1 != node2) {
+                edge *newEdge = getEdge(node2, node1);
+                if(newEdge != nullptr) {
+                    bool repeated = edge_exists(grafo.edges, newEdge);
+                    if(!repeated) {
+                        grafo.addEdge(newEdge->getWeight(), newEdge->nodes[0]->getData(), newEdge->nodes[1]->getData(), esDirigido);
+                    }
+                }
+            }
         }
-        cout << "visited" << endl;
-        for(ni = visited.begin(); ni != visited.end(); ni++){
-            cout << (*ni)->getData() << endl;
+        for(ei = grafo.edges.begin(); ei != grafo.edges.end(); ei++){
+            cout << (*ei)->nodes[0]->getData() << " " << (*ei)->getWeight() << " " << (*ei)->nodes[1]->getData() << "|";
         }
         for(mi = caminos.begin(); mi != caminos.end(); mi++){
             cout << mi->first << " " << mi->second << endl;
@@ -557,8 +566,79 @@ public:
         return grafo;
     }
 
-    self floydWarshall(){
-        return *this;
+
+    edge* getEdge(node* node1, node* node2){
+        if(node1 == node2) return nullptr;
+        for(ei = node1->edges.begin(); ei != node1->edges.end(); ei++){
+            if (node1->getOtherNode(*ei) == node2){
+                return *ei;
+            }
+        }
+        return nullptr;
+    }
+    int getEdgeBetween(node* node1, node* node2){
+        if(node1 == node2) return 0;
+
+        for(ei = node1->edges.begin(); ei != node1->edges.end(); ei++){
+            if (node1->getOtherNode(*ei) == node2 ){
+                return (*ei)->getWeight();
+            }
+        }
+        return 999;
+    }
+
+    pair<vector<vector<int>>, vector<vector<int>>> floyd() {
+        //creo 2 matrices de vectores tamanio mi cantidad de nodos
+        vector<vector<int>> m1(nodes.size(), vector<int>(nodes.size()));//caminos
+        vector<vector<int>> m2(nodes.size(), vector<int>(nodes.size()));//pasos
+
+        //relleno matrices, si es la diagonal la llena de 0
+        int i =0;
+        for (ni = nodes.begin(); ni != nodes.end(); ni++) {
+            int j=0;
+            for (NodeIte ni2 = nodes.begin(); ni2 != nodes.end(); ni2++) {
+                if (i != j){
+                    m1[i][j] = getEdgeBetween((*ni), (*ni2));//getEdgeBetween(i,j); //relleno la matriz 1
+                    m2[i][j] = j+1; //relleno matriz 2 con el valor de la columna
+                }
+                j++;
+            }
+            i++;
+        }
+
+        //calcular cruces y guardar resultados en la m1 y m2
+        for(int l = 0; l < nodes.size(); l++){
+            for(int j = 0; j < nodes.size(); j++){
+                for(int k = 0; k < nodes.size(); k++){
+                    int distance = m1[j][l] + m1[l][k];
+                    if(distance < m1[j][k] && distance != 0){
+                        m1[j][k] = distance;
+                        m2[j][k] = l+1;
+                    }
+                }
+            }
+        }
+
+        //prints
+        cout<<"matriz 1:\n";
+        for (int l = 0; l < nodes.size(); ++l) {
+            for (int j = 0; j < nodes.size(); ++j) {
+                cout<<m1[l][j]<<"\t\t\t";
+            }
+            cout<<"\n";
+        }
+
+        cout<<"\n\n";
+
+        cout<<"matriz 2:\n";
+        for (int l = 0; l < nodes.size(); ++l) {
+            for (int j = 0; j < nodes.size(); ++j) {
+                cout<<m2[l][j]<<"\t";
+            }
+            cout<<"\n";
+        }
+
+        return make_pair(m1,m2);
     }
 
     map<N,int> bellmanFord(N data){
