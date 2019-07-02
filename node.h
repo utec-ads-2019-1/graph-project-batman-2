@@ -40,6 +40,7 @@ class Node {
         N data;
         double x;
         double y;
+        EdgeIte ei1, ei2;
 };
 
 #endif

@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     g.addNode('D', 1, 7);
     g.addNode('E', 1, 6);
 
-    g.addEdge(3,'B','A',true);
+    g.addEdge(3,'B','A', true);
     g.addEdge(6,'A','C', true);
     g.addEdge(3,'A','D', true);
     g.addEdge(2,'C','D', true);
@@ -24,7 +24,9 @@ int main(int argc, char *argv[]) {
     g.addEdge(2,'E','D', true);
 
 
-    g.floyd();
+
+    g.bellmanFord('A');
+
 
 
     return EXIT_SUCCESS;
