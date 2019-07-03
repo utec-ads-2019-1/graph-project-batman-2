@@ -20,7 +20,7 @@ class Edge {
 
         bool findEdge(int node1, int node2){
             node* n;
-
+            return false;
         }
 
     private:

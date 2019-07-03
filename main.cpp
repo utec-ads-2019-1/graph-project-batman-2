@@ -5,6 +5,8 @@
 #include "graph.h"
 #include <fstream>
 #include <sstream>
+#include "node.h"
+#include "edge.h"
 
 #define PI M_PI
 #define vertex 40
@@ -118,11 +120,9 @@ void display(){
         glColor3d(1, 1, 1);
         RenderString(pos.first,pos.second,to_string(edge->getWeight()));
     }
-    auto nodes = g.getNodes();
-
+    graph::NodeSeq nodes = g.getNodes();
     for(auto it = nodes.begin();it!=nodes.end();it++){
-        auto node = *it;
-        cout<<node->getData();
+        graph::node* node = *it;
         DrawCircle(node->getX(),node->getY(),rad);
 
         glColor3d(0.0, 0.0, 0.0);
@@ -136,7 +136,7 @@ void display(){
 
 
 int main(int argc,char **argv) {
-    g = g.a_star('F','E');
+    g.bellmanFord('F');
     glutInit(&argc, argv);
     glutInitWindowPosition(0,0);
     glutInitWindowSize(900,900);
