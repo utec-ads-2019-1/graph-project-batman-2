@@ -7,7 +7,6 @@
 #include <stack>
 #include <cmath>
 #include <limits>
-#include <pthread.h>
 #include "node.h"
 #include "edge.h"
 
@@ -254,17 +253,14 @@ public:
     self prim(N data) {
         if (esDirigido) throw out_of_range("Prim no funciona en grafos dirigidos");
         self mst;
-        EdgeSeq temp;
+        EdgeSeq temp=edges;
         EdgeSeq opciones;
         node *vertice;
         searchNode(data, vertice);
-        mst.nodes.push_back(vertice);
+        mst.addNode(vertice->getData(),vertice->getX(),vertice->getY());
 
-        while (mst.nodes.size() < nodes.size()) {
-            //Se agregan todas las aristas a temp
-            for (ei = edges.begin(); ei != edges.end(); ei++) {
-                temp.push_back(*ei);
-            }
+       // while (mst.nodes.size() < nodes.size()) {
+
             //Se agregan las aristas que puedo tomar a opciones
             for (ni = mst.nodes.begin(); ni != mst.nodes.end(); ni++) {
                 for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
@@ -273,27 +269,29 @@ public:
                     }
                 }
             }
+            opciones.sort([](edge* edge1, edge* edge2)
+        {
+            if(edge1->getWeight() > edge2->getWeight())
+                return true;
+            return false;
+        });
             //Se encuentra la menor arista de temp y se verifica si esta entre opciones
-            int n = mst.edges.size() + 1;
-            while (mst.edges.size() < n) {
-                edge *minEdge = *(temp.begin());
+            for(auto it=opciones.begin();it!=opciones.end();it++){
+                edge *minEdge = *it;
                 if (edge_exists(opciones, minEdge) && !edge_exists(mst.edges, minEdge)) {
-                    if (!node_exists(mst.nodes, minEdge->nodes[0])) {
-                        mst.nodes.push_back(minEdge->nodes[0]);
+                    node* n0 = minEdge->nodes[0];
+                    node* n1 = minEdge->nodes[1];
+
+                    if (!node_exists(mst.nodes, n0)) {
+                        mst.addNode(n0->getData(),n0->getX(),n0->getY());
                     }
-                    if (!node_exists(mst.nodes, minEdge->nodes[1])) {
-                        mst.nodes.push_back(minEdge->nodes[1]);
+                    if (!node_exists(mst.nodes, n1)) {
+                        mst.addNode(n1->getData(),n1->getX(),n1->getY());
                     }
-                    mst.edges.push_back(minEdge);
-                }
-                    //Si no esta, se borra y se busca la siguiente
-                else {
-                    temp.erase(temp.begin());
+                    mst.addEdge(minEdge->getWeight(),n0->getData(),n1->getData());
                 }
             }
-            //se libera el temp para ser llenado de nuevo
-            temp.clear();
-        }
+      //  }
 
         /*for(ei = mst.edges.begin(); ei != mst.edges.end(); ei++){
             edge *temp1 = *ei;
@@ -418,13 +416,12 @@ public:
         searchNode(data_start, start);
         searchNode(data_final, final);
         grafo.addNode(start->getData(), start->getX(), start->getY());
-        cout << "starting at " << start->getData() << " and ending at " << final->getData() << endl;
+
         //Se crea un puntero a nodo current que se movera desde el nodo inicial hasta el final y una variable suma que ira sumando la distancia recorrida
         node* current = start;
         int suma = 0;
         //Mientras current no llegue al final, se repetira la siguiente seccion
         while(current != final){
-            cout << "current node " << current->getData() << endl;
             //Se crea un puntero a la primera arista del nodo current, y se asume que esta es la preferida. Se asume tambien su distancia total como la menor
             edge* preferred = *(current->edges.begin());
             int minDist = preferred->getWeight() + suma + getDistance(current->getOtherNode(preferred),final);
@@ -433,7 +430,6 @@ public:
                 node* other = current->getOtherNode(*ei);
                 //Si el nodo al otro lado de la arista es el fina, se toma como preferido
                 if(other==final){
-                    cout << other->getData() << " es final" << endl;
                     preferred=*ei;
                     break;
                 }
@@ -447,11 +443,12 @@ public:
             //Se agrega el nodo al otro lado de la arista preferida a la lista de nodos visitados y se remueve de los no visitados.
             node* newNode = current->getOtherNode(preferred);
             visited.push_back(newNode);
+            grafo.addNode(newNode->getData(), newNode->getX(), newNode->getY());
+            grafo.addEdge(preferred->getWeight(),current->getData(),newNode->getData());
             int count = 0;
             for(ni=unvisited.begin();ni!=unvisited.end();ni++){
-                cout << "loop" << endl;
                 if(*ni == newNode){
-                    cout << (*(unvisited.begin()+count))->getData() << endl;
+                   // cout << (*(unvisited.begin()+count))->getData() << endl;
                     unvisited.erase(unvisited.begin() + count);
                     break;
                 }
@@ -459,16 +456,12 @@ public:
             }
             //Se asigna current al nuevo nodo
             current = newNode;
-            cout << current->getData() << endl;
         }
-        for(ni = visited.begin(); ni != visited.end(); ni++) {
-            grafo.addNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
-        }
-        cout << "nodes in order" << endl;
-        for(ni = grafo.nodes.begin(); ni != grafo.nodes.end(); ni++){
+
+        /*for(ni = grafo.nodes.begin(); ni != grafo.nodes.end(); ni++){
             cout << (*ni)->getData() << endl;
-        }
-        cout << "hola" << endl;
+        }*/
+
         return grafo;
     }
 
@@ -543,6 +536,12 @@ public:
 
     }
 
+    NodeSeq getNodes(){
+        return nodes;
+    }
+    EdgeSeq getEdges(){
+        return edges;
+    }
     ~Graph() {
         while (!nodes.empty()) {
             delete nodes.back();

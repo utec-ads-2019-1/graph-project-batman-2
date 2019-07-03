@@ -14,6 +14,9 @@ class Edge {
         E getWeight(){
             return weight;
         }
+        bool esDirigido(){
+            return dir;
+        }
     private:
         E weight;
         bool dir;

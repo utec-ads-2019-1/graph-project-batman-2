@@ -18,7 +18,7 @@ class Node {
 
         Node(N data,double x, double y) : data(data), x(x),y(y) {};
 
-        N getData(){
+        char getData(){
             return data;
         }
 
