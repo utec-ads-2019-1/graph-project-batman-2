@@ -468,8 +468,7 @@ public:
             grafo.addNode(newNode->getData(),newNode->getX(),newNode->getY());
             grafo.addEdge(preferred->getWeight(),current->getData(),newNode->getData(),esDirigido);
             visited.push_back(newNode);
-            grafo.addNode(newNode->getData(), newNode->getX(), newNode->getY());
-            grafo.addEdge(preferred->getWeight(),current->getData(),newNode->getData());
+
             int count = 0;
             for(ni=unvisited.begin();ni!=unvisited.end();ni++){
                 if(*ni == newNode){
