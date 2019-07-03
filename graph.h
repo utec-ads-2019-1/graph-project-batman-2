@@ -267,17 +267,14 @@ public:
     self prim(N data) {
         if (esDirigido) throw out_of_range("Prim no funciona en grafos dirigidos");
         self mst;
-        EdgeSeq temp;
+        EdgeSeq temp=edges;
         EdgeSeq opciones;
         node *vertice;
         searchNode(data, vertice);
-        mst.nodes.push_back(vertice);
+        mst.addNode(vertice->getData(),vertice->getX(),vertice->getY());
 
-        while (mst.nodes.size() < nodes.size()) {
-            //Se agregan todas las aristas a temp
-            for (ei = edges.begin(); ei != edges.end(); ei++) {
-                temp.push_back(*ei);
-            }
+       // while (mst.nodes.size() < nodes.size()) {
+
             //Se agregan las aristas que puedo tomar a opciones
             for (ni = mst.nodes.begin(); ni != mst.nodes.end(); ni++) {
                 for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end(); ei++) {
@@ -286,27 +283,29 @@ public:
                     }
                 }
             }
+            opciones.sort([](edge* edge1, edge* edge2)
+        {
+            if(edge1->getWeight() > edge2->getWeight())
+                return true;
+            return false;
+        });
             //Se encuentra la menor arista de temp y se verifica si esta entre opciones
-            int n = mst.edges.size() + 1;
-            while (mst.edges.size() < n) {
-                edge *minEdge = *(temp.begin());
+            for(auto it=opciones.begin();it!=opciones.end();it++){
+                edge *minEdge = *it;
                 if (edge_exists(opciones, minEdge) && !edge_exists(mst.edges, minEdge)) {
-                    if (!node_exists(mst.nodes, minEdge->nodes[0])) {
-                        mst.nodes.push_back(minEdge->nodes[0]);
+                    node* n0 = minEdge->nodes[0];
+                    node* n1 = minEdge->nodes[1];
+
+                    if (!node_exists(mst.nodes, n0)) {
+                        mst.addNode(n0->getData(),n0->getX(),n0->getY());
                     }
-                    if (!node_exists(mst.nodes, minEdge->nodes[1])) {
-                        mst.nodes.push_back(minEdge->nodes[1]);
+                    if (!node_exists(mst.nodes, n1)) {
+                        mst.addNode(n1->getData(),n1->getX(),n1->getY());
                     }
-                    mst.edges.push_back(minEdge);
-                }
-                    //Si no esta, se borra y se busca la siguiente
-                else {
-                    temp.erase(temp.begin());
+                    mst.addEdge(minEdge->getWeight(),n0->getData(),n1->getData());
                 }
             }
-            //se libera el temp para ser llenado de nuevo
-            temp.clear();
-        }
+      //  }
 
         /*for(ei = mst.edges.begin(); ei != mst.edges.end(); ei++){
             edge *temp1 = *ei;
@@ -437,6 +436,7 @@ public:
         }
 
         grafo.addNode(start->getData(), start->getX(), start->getY());
+
         //Se crea un puntero a nodo current que se movera desde el nodo inicial hasta el final y una variable suma que ira sumando la distancia recorrida
         node* current = start;
         int suma = 0;
@@ -468,9 +468,12 @@ public:
             grafo.addNode(newNode->getData(),newNode->getX(),newNode->getY());
             grafo.addEdge(preferred->getWeight(),current->getData(),newNode->getData(),esDirigido);
             visited.push_back(newNode);
+            grafo.addNode(newNode->getData(), newNode->getX(), newNode->getY());
+            grafo.addEdge(preferred->getWeight(),current->getData(),newNode->getData());
             int count = 0;
             for(ni=unvisited.begin();ni!=unvisited.end();ni++){
                 if(*ni == newNode){
+                   // cout << (*(unvisited.begin()+count))->getData() << endl;
                     unvisited.erase(unvisited.begin() + count);
                     break;
                 }
@@ -478,6 +481,11 @@ public:
             }
             //Se asigna current al nuevo nodo
             current = newNode;
+        }
+
+        /*for(ni = grafo.nodes.begin(); ni != grafo.nodes.end(); ni++){
+            cout << (*ni)->getData() << endl;
+        }*/
 
         }
 
@@ -680,12 +688,20 @@ public:
 
     }
 
-    /*~Graph() {
+    NodeSeq getNodes(){
+        return nodes;
+    }
+    EdgeSeq getEdges(){
+        return edges;
+    }
+    
+
+    ~Graph() {
         while (!nodes.empty()) {
             delete nodes.back();
             nodes.pop_back();
         }
-    }*/
+    }
 
 private:
 
