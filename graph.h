@@ -487,7 +487,7 @@ public:
             cout << (*ni)->getData() << endl;
         }*/
 
-        }
+        
 
 
         for(ni = grafo.nodes.begin(); ni != grafo.nodes.end(); ni++){
