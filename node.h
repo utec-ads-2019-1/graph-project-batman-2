@@ -29,8 +29,6 @@ class Node {
             return y;
         }
 
-
-
         Node* getOtherNode(edge* ar){
             if(ar->nodes[0]!=this){
                 return ar->nodes[0];
@@ -42,6 +40,7 @@ class Node {
         N data;
         double x;
         double y;
+        EdgeIte ei1, ei2;
 };
 
 #endif

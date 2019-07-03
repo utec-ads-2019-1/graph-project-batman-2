@@ -133,6 +133,8 @@ void display(){
     glFlush();
 }
 
+
+
 int main(int argc,char **argv) {
     g = g.a_star('F','E');
     glutInit(&argc, argv);

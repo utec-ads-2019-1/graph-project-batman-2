@@ -17,6 +17,12 @@ class Edge {
         bool esDirigido(){
             return dir;
         }
+
+        bool findEdge(int node1, int node2){
+            node* n;
+
+        }
+
     private:
         E weight;
         bool dir;
